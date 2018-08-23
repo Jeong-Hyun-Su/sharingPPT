@@ -77,7 +77,7 @@ namespace WindowsFormsApp11
         private void StartServer()
         {
             /////client 연결
-            int port = Convert.ToInt32( textBox_Port.Text);
+            int port = Convert.ToInt32(textBox_Port.Text);
             listener = new TcpListener(IPAddress.Any, port);
             TcpClient client ;
             listener.Start();

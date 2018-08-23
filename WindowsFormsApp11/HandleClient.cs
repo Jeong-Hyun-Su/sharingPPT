@@ -37,7 +37,7 @@ namespace WindowsFormsApp11
             set;
         }
 
-        public  string fName
+        public string fName
         {
             get;
             set;
@@ -77,13 +77,13 @@ namespace WindowsFormsApp11
                             string[] filenames = fName.Split('\\');
                             string filename = filenames[filenames.Length - 1];
 
-                            Byte[] sendBytes = Encoding.ASCII.GetBytes(filename);
+                            Byte[] sendBytes = Encoding.UTF8.GetBytes(filename);
                             networkStream.Write(sendBytes, 0, sendBytes.Length);
 
                             byte[] ReadByte;
                             ReadByte = new byte[client.ReceiveBufferSize];
                             int BytesRead = networkStream.Read(ReadByte, 0, (int)ReadByte.Length);
-                            string serverFileName = Encoding.GetEncoding("ks_c_5601-1987").GetString(ReadByte, 0, BytesRead);
+                            string serverFileName = Encoding.GetEncoding("utf-8").GetString(ReadByte, 0, BytesRead);
                             Console.WriteLine(serverFileName);
 
                             /*파일 사이즈를 클라이언트로 전달*/
