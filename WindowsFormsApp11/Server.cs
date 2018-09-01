@@ -86,21 +86,24 @@ namespace WindowsFormsApp11
             {
                 try
                 {
-                    client = listener.AcceptTcpClient();
 
+                    client = listener.AcceptTcpClient();
+                    
                     HandleClient handleClient = new HandleClient();
                     handleClient.newClient(client, nClient);
-
+                    
                     clientList.Add(handleClient);
                     nClient++;
                     Invoke((MethodInvoker)delegate
                     {
                         label1.Text = nClient.ToString();
                     });
+
+                    
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    return;
+                    Console.WriteLine(ex.Message);
                 }
             }
         }

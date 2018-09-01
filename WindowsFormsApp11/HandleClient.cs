@@ -9,6 +9,8 @@ using System.Threading;
 using System.Diagnostics;
 using System.Configuration;
 using System.IO;
+using Microsoft.Office.Core;
+using PowerPoint = Microsoft.Office.Interop.PowerPoint;
 
 namespace WindowsFormsApp11
 {
@@ -48,6 +50,14 @@ namespace WindowsFormsApp11
             get;
             set;
         }
+
+        public bool isLock
+        {
+            get;
+            set;
+        }
+
+
         public void newClient(TcpClient client, int clientNum)
         {
             this.client = client;
@@ -55,29 +65,35 @@ namespace WindowsFormsApp11
             this.isConnect = true;
 
             networkStream = client.GetStream();
+            /**/
+            byte[] sendBytes = Encoding.UTF8.GetBytes(this.clientNum.ToString());
+            networkStream.Write(sendBytes, 0, sendBytes.Length);
+            networkStream.Flush();
+            /**/
             Thread thread = new Thread(handle);
             thread.IsBackground = true;
             thread.Start();
         }
+
         public void handle()
         {
             try
             {
                 while (true)
                 {
-
                     if (isUpload == true)
                     {
 
+                        Console.WriteLine("is Upload true");
                         FileInfo file = new FileInfo(fName);
                         FileStream fs = file.OpenRead();
-
+                        
                         if (networkStream.CanWrite && networkStream.CanRead)
                         {
                             string[] filenames = fName.Split('\\');
                             string filename = filenames[filenames.Length - 1];
 
-                            Byte[] sendBytes = Encoding.UTF8.GetBytes(filename);
+                            byte[] sendBytes = Encoding.UTF8.GetBytes(filename);
                             networkStream.Write(sendBytes, 0, sendBytes.Length);
 
                             byte[] ReadByte;
@@ -87,7 +103,7 @@ namespace WindowsFormsApp11
                             Console.WriteLine(serverFileName);
 
                             /*파일 사이즈를 클라이언트로 전달*/
-                            networkStream.Write(Encoding.ASCII.GetBytes(file.Length.ToString()), 0, Encoding.ASCII.GetBytes(file.Length.ToString()).Length);
+                            networkStream.Write(Encoding.UTF8.GetBytes(file.Length.ToString()), 0, Encoding.UTF8.GetBytes(file.Length.ToString()).Length);
 
                             /*클라이언트 측에서 준비되었는지 확인하고 준비되었다면 파일전송*/
                             int BytesRead2 = 0;
@@ -107,17 +123,69 @@ namespace WindowsFormsApp11
                             fs.Close();
                         }
                         networkStream.Flush();
-                       // networkStream.Close();
+                        // networkStream.Close();
                         isUpload = false;
+                        isLock = true;
                     }
+                    
+                    ///////////////여기고쳐줘.....
+                    if(isLock==true)
+                    {
+                    
+                    
+                        byte[] buffer = new byte[1024 * 4];
+
+                        int bytesRead = 0;
+                        bytesRead = networkStream.Read(buffer, 0, buffer.Length);
+                        
+                        analyzePacket(buffer);
+                    
+                    }
+                  
+                    
+
+
                 }
+
             }
-            catch
+            catch(Exception e)
             {
                 if(client.Connected == false)
                 {
                     isConnect = false;
                 }
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        private void analyzePacket(byte[] buffer)
+        {
+            
+            Packet packet = (Packet)Packet.Deserialize(buffer);
+            if (packet == null)
+                return;
+            switch ((int)packet.packet_Type)
+            {
+                case ((int)PacketType.PAGENUM):
+                    PageNum page = (PageNum)Packet.Deserialize(buffer);
+                    Console.WriteLine("클라이언트 번호 : " + clientNum + "  ppt번호 : " +page.pptNum+"  page번호: " + page.pageNum);
+
+                    break;
+                case ((int)PacketType.SAVESLIDE):
+                    SlidePacket pSlide = (SlidePacket)Packet.Deserialize(buffer);
+                    PowerPoint.Slide slide = pSlide.slide;
+
+                    int pagenum = pSlide.pageNum;
+
+                    PowerPoint.Presentation ppt = new PowerPoint.Presentation();
+                    //ppt.Slides.AddSlide(pagenum, slide);
+                    
+
+
+                    break;
+
+
+                       
             }
         }
     }

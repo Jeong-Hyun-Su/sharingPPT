@@ -45,6 +45,8 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label_IP = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -62,7 +64,7 @@
             // textBox_Port
             // 
             this.textBox_Port.Location = new System.Drawing.Point(119, 117);
-            this.textBox_Port.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox_Port.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_Port.Name = "textBox_Port";
             this.textBox_Port.Size = new System.Drawing.Size(152, 25);
             this.textBox_Port.TabIndex = 1;
@@ -70,7 +72,7 @@
             // textBox_PW
             // 
             this.textBox_PW.Location = new System.Drawing.Point(119, 165);
-            this.textBox_PW.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.textBox_PW.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_PW.Name = "textBox_PW";
             this.textBox_PW.PasswordChar = '*';
             this.textBox_PW.Size = new System.Drawing.Size(152, 25);
@@ -89,7 +91,7 @@
             // button_Make
             // 
             this.button_Make.Location = new System.Drawing.Point(134, 231);
-            this.button_Make.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_Make.Margin = new System.Windows.Forms.Padding(2);
             this.button_Make.Name = "button_Make";
             this.button_Make.Size = new System.Drawing.Size(117, 47);
             this.button_Make.TabIndex = 4;
@@ -99,11 +101,15 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.label3);
+            this.panel1.Controls.Add(this.label2);
+            this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.button_Upload);
+            this.panel1.Controls.Add(this.label_IP);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Enabled = false;
-            this.panel1.Location = new System.Drawing.Point(10, 25);
-            this.panel1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel1.Location = new System.Drawing.Point(9, 24);
+            this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(362, 335);
             this.panel1.TabIndex = 5;
@@ -112,7 +118,7 @@
             // button_Upload
             // 
             this.button_Upload.Location = new System.Drawing.Point(54, 11);
-            this.button_Upload.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_Upload.Margin = new System.Windows.Forms.Padding(2);
             this.button_Upload.Name = "button_Upload";
             this.button_Upload.Size = new System.Drawing.Size(73, 28);
             this.button_Upload.TabIndex = 0;
@@ -132,7 +138,7 @@
             this.panel2.Controls.Add(this.label_ppt1);
             this.panel2.ForeColor = System.Drawing.Color.Black;
             this.panel2.Location = new System.Drawing.Point(11, 27);
-            this.panel2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(160, 296);
             this.panel2.TabIndex = 7;
@@ -144,7 +150,7 @@
             this.button_ppt0.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button_ppt0.Enabled = false;
             this.button_ppt0.Location = new System.Drawing.Point(54, 31);
-            this.button_ppt0.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_ppt0.Margin = new System.Windows.Forms.Padding(2);
             this.button_ppt0.Name = "button_ppt0";
             this.button_ppt0.Size = new System.Drawing.Size(49, 54);
             this.button_ppt0.TabIndex = 3;
@@ -170,7 +176,7 @@
             this.button_ppt1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button_ppt1.Enabled = false;
             this.button_ppt1.Location = new System.Drawing.Point(54, 117);
-            this.button_ppt1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_ppt1.Margin = new System.Windows.Forms.Padding(2);
             this.button_ppt1.Name = "button_ppt1";
             this.button_ppt1.Size = new System.Drawing.Size(49, 54);
             this.button_ppt1.TabIndex = 1;
@@ -197,7 +203,7 @@
             this.button_ppt2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button_ppt2.Enabled = false;
             this.button_ppt2.Location = new System.Drawing.Point(54, 199);
-            this.button_ppt2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_ppt2.Margin = new System.Windows.Forms.Padding(2);
             this.button_ppt2.Name = "button_ppt2";
             this.button_ppt2.Size = new System.Drawing.Size(49, 54);
             this.button_ppt2.TabIndex = 2;
@@ -220,7 +226,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(339, 0);
+            this.label1.Location = new System.Drawing.Point(298, 59);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(15, 15);
@@ -230,7 +236,7 @@
             // label_IP
             // 
             this.label_IP.AutoSize = true;
-            this.label_IP.Location = new System.Drawing.Point(18, 7);
+            this.label_IP.Location = new System.Drawing.Point(230, 27);
             this.label_IP.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_IP.Name = "label_IP";
             this.label_IP.Size = new System.Drawing.Size(45, 15);
@@ -241,26 +247,43 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(180, 27);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 15);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "IP : ";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(176, 59);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(117, 15);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "현재접속자 수 : ";
+            // 
             // Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(382, 370);
-            this.Controls.Add(this.label1);
-            this.Controls.Add(this.label_IP);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.button_Make);
             this.Controls.Add(this.label_PW);
             this.Controls.Add(this.textBox_PW);
             this.Controls.Add(this.textBox_Port);
             this.Controls.Add(this.label_Port);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Server";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Server";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Server_FormClosed);
             this.Load += new System.EventHandler(this.Server_Load);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.ResumeLayout(false);
@@ -287,5 +310,7 @@
         private System.Windows.Forms.Button button_ppt0;
         private System.Windows.Forms.Button button_ppt2;
         private System.Windows.Forms.Panel panel2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label label2;
     }
 }
