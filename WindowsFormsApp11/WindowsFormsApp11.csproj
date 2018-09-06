@@ -134,5 +134,11 @@
   <ItemGroup>
     <None Include="Resources\pptICOn.png" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary\ClassLibrary.csproj">
+      <Project>{98372c11-26fe-49f4-91e8-1d0a4ada8ec5}</Project>
+      <Name>ClassLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
