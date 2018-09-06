@@ -132,6 +132,7 @@ namespace WindowsFormsApp11
                     {
                         clientList[i].fName = openFileDialog1.FileName;
                         clientList[i].isUpload = true;
+                        clientList[i].Upload(1);
                     }
                 }
             }

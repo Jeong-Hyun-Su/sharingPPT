@@ -14,6 +14,7 @@ using System.IO;
 using System.Threading;
 using Microsoft.Office.Core;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using ClassLibrary;
 
 namespace WindowsFormsApp11
 {
@@ -26,6 +27,10 @@ namespace WindowsFormsApp11
        
         
         string clientNum = "";
+
+        ///packet
+        public UploadPacket uploadPacket;
+        public LockPacket lockPacket;
 
         ///ppt
         const int maxPPT = 4;
@@ -113,47 +118,38 @@ namespace WindowsFormsApp11
             {
                 string filename;
                 if (stream.CanRead && stream.CanWrite)
-                { /**/
-                    if (clientNum == "")
-                    {
-                        byte[] ReadByte2;
-                        ReadByte2 = new byte[client.ReceiveBufferSize];
-                        int BytesRead2 = stream.Read(ReadByte2, 0, (int)ReadByte2.Length);
-                        clientNum = Encoding.GetEncoding("utf-8").GetString(ReadByte2, 0, BytesRead2);
-                        Console.WriteLine(clientNum);
-                    } /**/
-
+                {
                     byte[] ReadByte;
                     ReadByte = new byte[client.ReceiveBufferSize];
-
                     int BytesRead = stream.Read(ReadByte, 0, (int)ReadByte.Length);
-                    filename = Encoding.GetEncoding("utf-8").GetString(ReadByte, 0, BytesRead);
+                    filename = Encoding.GetEncoding("ks_c_5601-1987").GetString(ReadByte, 0, BytesRead);
                     if (filename != "")
                     {
-                        Byte[] sendBytes = Encoding.GetEncoding("utf-8").GetBytes(_Path + @"\" + filename);
+                        ///packet.type = upload
+                        byte[] buffer = new byte[1024 * 4];
+                        uploadPacket = new UploadPacket();
+                        uploadPacket.type = (int)PacketType.UPLOAD;
+                        uploadPacket.isup = true;
+                        Packet.Serialize(uploadPacket).CopyTo(buffer, 0);
+                        stream.Write(buffer, 0, buffer.Length);
+                        Console.WriteLine("uploadpacket");
+
+                        MessageBox.Show(filename);
+                        Byte[] sendBytes = Encoding.GetEncoding("ks_c_5601-1987").GetBytes(_Path + @"\" + filename);
                         stream.Write(sendBytes, 0, sendBytes.Length);
 
                         int ByteSize = 0;
                         Byte[] FileSizeBytes = new byte[client.ReceiveBufferSize];
                         ByteSize = stream.Read(FileSizeBytes, 0, FileSizeBytes.Length);
-                        int MaxFileLength = Convert.ToInt32(Encoding.UTF8.GetString(FileSizeBytes, 0, ByteSize));
+                        int MaxFileLength = Convert.ToInt32(Encoding.ASCII.GetString(FileSizeBytes, 0, ByteSize));
 
                         /*전송준비작업을 완료했다고 서버에 전해줌*/
                         byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
-                        ReadyTransBytes = Encoding.UTF8.GetBytes("READY");
+                        ReadyTransBytes = Encoding.ASCII.GetBytes("READY");
                         stream.Write(ReadyTransBytes, 0, ReadyTransBytes.Length);
 
+                        FileStream fs = new FileStream(_Path + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);
 
-                        if (Directory.Exists(_Path + @"\" + clientNum))
-                        {
-                            Console.WriteLine("That path exists already.");
-                        }
-                        else
-                        {
-                            DirectoryInfo di = Directory.CreateDirectory(_Path + @"\" + clientNum);
-                        }
-
-                        FileStream fs = new FileStream(_Path + @"\"+clientNum + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);
                         if (filename != string.Empty)
                         {
 
@@ -176,12 +172,11 @@ namespace WindowsFormsApp11
                         {
                             ButtonPPT[IdxPPT].Visible = true;
                             ButtonPPT[IdxPPT].Enabled = true;
-                            ButtonPPT[IdxPPT].Tag = _Path + @"\" + clientNum + @"\" + filename;
+                            ButtonPPT[IdxPPT].Tag = _Path + @"\" + filename;
                             LabelPPT[IdxPPT].Visible = true;
                             LabelPPT[IdxPPT].Text = Path.GetFileNameWithoutExtension(filename);
                             PanelPPT[IdxPPT].Visible = false;
                             IdxPPT++;
-
                         });
                     }
                 }
@@ -203,15 +198,16 @@ namespace WindowsFormsApp11
             //Send to Server
             try
             {
+
+                Console.WriteLine("select");
                 byte[] buffer = new byte[1024 * 4];
+                lockPacket = new LockPacket();
+                lockPacket.type = (int)PacketType.LOCK;
+                lockPacket.pageNum = pagenum ;
 
-                PageNum page = new PageNum();
-                page.packet_Type = (int)PacketType.PAGENUM;
-                page.pageNum = pagenum;
-
-                Packet.Serialize(page).CopyTo(buffer, 0);
-
+                Packet.Serialize(lockPacket).CopyTo(buffer, 0);
                 stream.Write(buffer, 0, buffer.Length);
+                
                 stream.Flush();
 
             }
@@ -223,7 +219,7 @@ namespace WindowsFormsApp11
         }
 
         private void savePage(int pptNum)
-        {
+        {/*
             if (TextBoxPage[pptNum].Text == "")
                 MessageBox.Show("수정할 페이지를 선택후 저장해주세요.");
             else
@@ -252,7 +248,7 @@ namespace WindowsFormsApp11
                     Console.WriteLine("savePage() 에러 : " + e.Message);
                 }
             }
-           
+           */
         }
 
         private void selectBtn1_Click(object sender, EventArgs e)
