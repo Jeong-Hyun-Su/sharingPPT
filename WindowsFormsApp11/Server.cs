@@ -15,6 +15,7 @@ using System.Configuration;
 using System.IO;
 using Microsoft.Office.Core;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
+using System.Runtime.InteropServices;
 
 namespace WindowsFormsApp11
 {
@@ -35,7 +36,7 @@ namespace WindowsFormsApp11
         const int maxPPT = 4;
         Button []ButtonPPT = new Button[maxPPT];
         Label[] LabelPPT = new Label[maxPPT];
-        int IdxPPT = 0;
+        int IdxPPT = 0, curIdxPPT=0;
         PowerPoint.Application []ppt = new PowerPoint.Application[maxPPT];
         PowerPoint.Presentations []presentations = new PowerPoint.Presentations[maxPPT];
         PowerPoint.Presentation []presentation = new PowerPoint.Presentation[maxPPT];
@@ -70,6 +71,13 @@ namespace WindowsFormsApp11
             panel1.Visible = true;
             panel1.Enabled = true;
            
+            //리스트 자신추가
+            ListViewItem li = new ListViewItem();
+            li.Text = textBox_name.Text;
+            li.SubItems.Add("");
+            li.SubItems.Add("");
+            listView1.Items.Add(li);
+            
             thread = new Thread(StartServer);
             thread.Start();
         }
@@ -90,15 +98,39 @@ namespace WindowsFormsApp11
                     client = listener.AcceptTcpClient();
                     
                     HandleClient handleClient = new HandleClient();
-                    handleClient.newClient(client, nClient);
-                    
+
+                    string names=textBox_name.Text+"/";
+                    for(int i=0; i<nClient; i++)
+                    {
+                        names = names + clientList[i].name + "/";
+                    }
+                    handleClient.newClient(client, nClient,names);
                     clientList.Add(handleClient);
+
+                    while (true)
+                    {
+                        ///리스트추가&보내기
+                        if(clientList[nClient].isAddName == true)
+                        {
+                            ListViewItem li = new ListViewItem();
+                            li.Text = clientList[nClient].name;
+                            li.SubItems.Add("");
+                            li.SubItems.Add("");
+                            listView1.Items.Add(li);
+
+                            for(int i=0; i<nClient; i++)
+                            {
+                                clientList[i].AddList(clientList[nClient].name);
+                            }
+                            break;
+                        }
+                    }
                     nClient++;
                     Invoke((MethodInvoker)delegate
                     {
                         label1.Text = nClient.ToString();
                     });
-
+                    
                     
                 }
                 catch (Exception ex)
@@ -146,10 +178,18 @@ namespace WindowsFormsApp11
                 if (ButtonPPT[i] == sender)
                     idx = i;
             }
+            curIdxPPT = idx;
             ppt[idx] = new PowerPoint.Application();
             presentations[idx] = ppt[idx].Presentations;
             presentation[idx] = presentations[idx].Open(ButtonPPT[idx].Tag.ToString(), MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoCTrue);
 
+        }
+
+        private void button_lock_Click(object sender, EventArgs e)
+        {
+            int pagenum = ppt[curIdxPPT].ActiveWindow.Selection.SlideRange.SlideNumber;
+            listView1.Items[0].SubItems[1].Text = curIdxPPT.ToString();
+            listView1.Items[0].SubItems[2].Text = pagenum.ToString();
         }
     }
 }

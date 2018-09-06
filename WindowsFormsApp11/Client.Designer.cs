@@ -36,28 +36,21 @@
             this.textBox1_IP = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.button_unlock = new System.Windows.Forms.Button();
+            this.button_lock = new System.Windows.Forms.Button();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
-            this.ppt2_panel = new System.Windows.Forms.Panel();
-            this.ppt3_panel = new System.Windows.Forms.Panel();
-            this.ppt1_panel = new System.Windows.Forms.Panel();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.saveBtn3 = new System.Windows.Forms.Button();
-            this.saveBtn2 = new System.Windows.Forms.Button();
-            this.saveBtn1 = new System.Windows.Forms.Button();
-            this.selectBtn3 = new System.Windows.Forms.Button();
-            this.selectBtn2 = new System.Windows.Forms.Button();
-            this.ppt3pagenum = new System.Windows.Forms.TextBox();
-            this.selectBtn1 = new System.Windows.Forms.Button();
-            this.ppt2pagenum = new System.Windows.Forms.TextBox();
-            this.ppt1pagenum = new System.Windows.Forms.TextBox();
             this.button_ppt0 = new System.Windows.Forms.Button();
             this.label_ppt0 = new System.Windows.Forms.Label();
             this.button_ppt1 = new System.Windows.Forms.Button();
             this.label_ppt2 = new System.Windows.Forms.Label();
             this.button_ppt2 = new System.Windows.Forms.Button();
             this.label_ppt1 = new System.Windows.Forms.Label();
+            this.label_name = new System.Windows.Forms.Label();
+            this.textBox_name = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -76,7 +69,7 @@
             // label_PW
             // 
             this.label_PW.AutoSize = true;
-            this.label_PW.Location = new System.Drawing.Point(85, 200);
+            this.label_PW.Location = new System.Drawing.Point(86, 232);
             this.label_PW.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_PW.Name = "label_PW";
             this.label_PW.Size = new System.Drawing.Size(46, 18);
@@ -85,7 +78,7 @@
             // 
             // textBox_PW
             // 
-            this.textBox_PW.Location = new System.Drawing.Point(135, 194);
+            this.textBox_PW.Location = new System.Drawing.Point(136, 226);
             this.textBox_PW.Margin = new System.Windows.Forms.Padding(2);
             this.textBox_PW.Name = "textBox_PW";
             this.textBox_PW.PasswordChar = '*';
@@ -130,34 +123,75 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.button_unlock);
+            this.panel1.Controls.Add(this.button_lock);
+            this.panel1.Controls.Add(this.listView1);
             this.panel1.Controls.Add(this.panel2);
             this.panel1.Enabled = false;
-            this.panel1.Location = new System.Drawing.Point(12, 20);
+            this.panel1.Location = new System.Drawing.Point(11, 31);
             this.panel1.Margin = new System.Windows.Forms.Padding(2);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(452, 402);
             this.panel1.TabIndex = 12;
             this.panel1.Visible = false;
             // 
+            // button_unlock
+            // 
+            this.button_unlock.Location = new System.Drawing.Point(323, 32);
+            this.button_unlock.Name = "button_unlock";
+            this.button_unlock.Size = new System.Drawing.Size(96, 55);
+            this.button_unlock.TabIndex = 16;
+            this.button_unlock.Text = "save";
+            this.button_unlock.UseVisualStyleBackColor = true;
+            // 
+            // button_lock
+            // 
+            this.button_lock.Location = new System.Drawing.Point(209, 32);
+            this.button_lock.Name = "button_lock";
+            this.button_lock.Size = new System.Drawing.Size(96, 55);
+            this.button_lock.TabIndex = 15;
+            this.button_lock.Text = "lock";
+            this.button_lock.UseVisualStyleBackColor = true;
+            this.button_lock.Click += new System.EventHandler(this.button_lock_Click);
+            // 
+            // listView1
+            // 
+            this.listView1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.listView1.Font = new System.Drawing.Font("굴림", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.listView1.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.listView1.GridLines = true;
+            this.listView1.Location = new System.Drawing.Point(192, 97);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(251, 290);
+            this.listView1.TabIndex = 14;
+            this.listView1.TileSize = new System.Drawing.Size(308, 40);
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "이름";
+            this.columnHeader1.Width = 70;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "PPT";
+            this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader2.Width = 50;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "PAGE";
+            this.columnHeader3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.SystemColors.Control;
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.ppt2_panel);
-            this.panel2.Controls.Add(this.ppt3_panel);
-            this.panel2.Controls.Add(this.ppt1_panel);
-            this.panel2.Controls.Add(this.label4);
-            this.panel2.Controls.Add(this.label3);
-            this.panel2.Controls.Add(this.label2);
-            this.panel2.Controls.Add(this.saveBtn3);
-            this.panel2.Controls.Add(this.saveBtn2);
-            this.panel2.Controls.Add(this.saveBtn1);
-            this.panel2.Controls.Add(this.selectBtn3);
-            this.panel2.Controls.Add(this.selectBtn2);
-            this.panel2.Controls.Add(this.ppt3pagenum);
-            this.panel2.Controls.Add(this.selectBtn1);
-            this.panel2.Controls.Add(this.ppt2pagenum);
-            this.panel2.Controls.Add(this.ppt1pagenum);
             this.panel2.Controls.Add(this.button_ppt0);
             this.panel2.Controls.Add(this.label_ppt0);
             this.panel2.Controls.Add(this.button_ppt1);
@@ -166,159 +200,12 @@
             this.panel2.Controls.Add(this.label_ppt1);
             this.panel2.Enabled = false;
             this.panel2.ForeColor = System.Drawing.Color.Black;
-            this.panel2.Location = new System.Drawing.Point(14, 20);
+            this.panel2.Location = new System.Drawing.Point(14, 32);
             this.panel2.Margin = new System.Windows.Forms.Padding(2);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(426, 355);
+            this.panel2.Size = new System.Drawing.Size(170, 355);
             this.panel2.TabIndex = 13;
             this.panel2.Visible = false;
-            // 
-            // ppt2_panel
-            // 
-            this.ppt2_panel.Location = new System.Drawing.Point(144, 126);
-            this.ppt2_panel.Margin = new System.Windows.Forms.Padding(4);
-            this.ppt2_panel.Name = "ppt2_panel";
-            this.ppt2_panel.Size = new System.Drawing.Size(238, 104);
-            this.ppt2_panel.TabIndex = 17;
-            // 
-            // ppt3_panel
-            // 
-            this.ppt3_panel.Location = new System.Drawing.Point(144, 232);
-            this.ppt3_panel.Margin = new System.Windows.Forms.Padding(4);
-            this.ppt3_panel.Name = "ppt3_panel";
-            this.ppt3_panel.Size = new System.Drawing.Size(238, 112);
-            this.ppt3_panel.TabIndex = 17;
-            // 
-            // ppt1_panel
-            // 
-            this.ppt1_panel.Location = new System.Drawing.Point(144, 16);
-            this.ppt1_panel.Margin = new System.Windows.Forms.Padding(4);
-            this.ppt1_panel.Name = "ppt1_panel";
-            this.ppt1_panel.Size = new System.Drawing.Size(238, 104);
-            this.ppt1_panel.TabIndex = 17;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(151, 248);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(54, 18);
-            this.label4.TabIndex = 16;
-            this.label4.Text = "page.";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(151, 145);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(54, 18);
-            this.label3.TabIndex = 16;
-            this.label3.Text = "page.";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(151, 37);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(54, 18);
-            this.label2.TabIndex = 16;
-            this.label2.Text = "page.";
-            // 
-            // saveBtn3
-            // 
-            this.saveBtn3.Location = new System.Drawing.Point(262, 286);
-            this.saveBtn3.Margin = new System.Windows.Forms.Padding(4);
-            this.saveBtn3.Name = "saveBtn3";
-            this.saveBtn3.Size = new System.Drawing.Size(108, 36);
-            this.saveBtn3.TabIndex = 15;
-            this.saveBtn3.Text = "save";
-            this.saveBtn3.UseVisualStyleBackColor = true;
-            this.saveBtn3.Click += new System.EventHandler(this.saveBtn3_Click);
-            // 
-            // saveBtn2
-            // 
-            this.saveBtn2.Location = new System.Drawing.Point(262, 182);
-            this.saveBtn2.Margin = new System.Windows.Forms.Padding(4);
-            this.saveBtn2.Name = "saveBtn2";
-            this.saveBtn2.Size = new System.Drawing.Size(108, 36);
-            this.saveBtn2.TabIndex = 15;
-            this.saveBtn2.Text = "save";
-            this.saveBtn2.UseVisualStyleBackColor = true;
-            this.saveBtn2.Click += new System.EventHandler(this.saveBtn2_Click);
-            // 
-            // saveBtn1
-            // 
-            this.saveBtn1.Location = new System.Drawing.Point(262, 74);
-            this.saveBtn1.Margin = new System.Windows.Forms.Padding(4);
-            this.saveBtn1.Name = "saveBtn1";
-            this.saveBtn1.Size = new System.Drawing.Size(108, 36);
-            this.saveBtn1.TabIndex = 15;
-            this.saveBtn1.Text = "save";
-            this.saveBtn1.UseVisualStyleBackColor = true;
-            this.saveBtn1.Click += new System.EventHandler(this.saveBtn1_Click);
-            // 
-            // selectBtn3
-            // 
-            this.selectBtn3.Location = new System.Drawing.Point(262, 244);
-            this.selectBtn3.Margin = new System.Windows.Forms.Padding(4);
-            this.selectBtn3.Name = "selectBtn3";
-            this.selectBtn3.Size = new System.Drawing.Size(108, 35);
-            this.selectBtn3.TabIndex = 13;
-            this.selectBtn3.Text = "select";
-            this.selectBtn3.UseVisualStyleBackColor = true;
-            this.selectBtn3.Click += new System.EventHandler(this.selectBtn3_Click);
-            // 
-            // selectBtn2
-            // 
-            this.selectBtn2.Location = new System.Drawing.Point(262, 140);
-            this.selectBtn2.Margin = new System.Windows.Forms.Padding(4);
-            this.selectBtn2.Name = "selectBtn2";
-            this.selectBtn2.Size = new System.Drawing.Size(108, 35);
-            this.selectBtn2.TabIndex = 13;
-            this.selectBtn2.Text = "select";
-            this.selectBtn2.UseVisualStyleBackColor = true;
-            this.selectBtn2.Click += new System.EventHandler(this.selectBtn2_Click);
-            // 
-            // ppt3pagenum
-            // 
-            this.ppt3pagenum.Location = new System.Drawing.Point(208, 246);
-            this.ppt3pagenum.Margin = new System.Windows.Forms.Padding(4);
-            this.ppt3pagenum.Name = "ppt3pagenum";
-            this.ppt3pagenum.ReadOnly = true;
-            this.ppt3pagenum.Size = new System.Drawing.Size(52, 28);
-            this.ppt3pagenum.TabIndex = 14;
-            // 
-            // selectBtn1
-            // 
-            this.selectBtn1.Location = new System.Drawing.Point(262, 32);
-            this.selectBtn1.Margin = new System.Windows.Forms.Padding(4);
-            this.selectBtn1.Name = "selectBtn1";
-            this.selectBtn1.Size = new System.Drawing.Size(108, 35);
-            this.selectBtn1.TabIndex = 13;
-            this.selectBtn1.Text = "select";
-            this.selectBtn1.UseVisualStyleBackColor = true;
-            this.selectBtn1.Click += new System.EventHandler(this.selectBtn1_Click);
-            // 
-            // ppt2pagenum
-            // 
-            this.ppt2pagenum.Location = new System.Drawing.Point(208, 143);
-            this.ppt2pagenum.Margin = new System.Windows.Forms.Padding(4);
-            this.ppt2pagenum.Name = "ppt2pagenum";
-            this.ppt2pagenum.ReadOnly = true;
-            this.ppt2pagenum.Size = new System.Drawing.Size(52, 28);
-            this.ppt2pagenum.TabIndex = 14;
-            // 
-            // ppt1pagenum
-            // 
-            this.ppt1pagenum.Location = new System.Drawing.Point(208, 35);
-            this.ppt1pagenum.Margin = new System.Windows.Forms.Padding(4);
-            this.ppt1pagenum.Name = "ppt1pagenum";
-            this.ppt1pagenum.ReadOnly = true;
-            this.ppt1pagenum.Size = new System.Drawing.Size(52, 28);
-            this.ppt1pagenum.TabIndex = 14;
             // 
             // button_ppt0
             // 
@@ -326,7 +213,7 @@
             this.button_ppt0.BackgroundImage = global::WindowsFormsApp11.Properties.Resources.pptICOn;
             this.button_ppt0.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button_ppt0.Enabled = false;
-            this.button_ppt0.Location = new System.Drawing.Point(41, 37);
+            this.button_ppt0.Location = new System.Drawing.Point(50, 37);
             this.button_ppt0.Margin = new System.Windows.Forms.Padding(2);
             this.button_ppt0.Name = "button_ppt0";
             this.button_ppt0.Size = new System.Drawing.Size(61, 65);
@@ -338,7 +225,7 @@
             // label_ppt0
             // 
             this.label_ppt0.AutoSize = true;
-            this.label_ppt0.Location = new System.Drawing.Point(49, 104);
+            this.label_ppt0.Location = new System.Drawing.Point(57, 104);
             this.label_ppt0.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_ppt0.Name = "label_ppt0";
             this.label_ppt0.Size = new System.Drawing.Size(11, 18);
@@ -352,7 +239,7 @@
             this.button_ppt1.BackgroundImage = global::WindowsFormsApp11.Properties.Resources.pptICOn;
             this.button_ppt1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button_ppt1.Enabled = false;
-            this.button_ppt1.Location = new System.Drawing.Point(41, 145);
+            this.button_ppt1.Location = new System.Drawing.Point(50, 145);
             this.button_ppt1.Margin = new System.Windows.Forms.Padding(2);
             this.button_ppt1.Name = "button_ppt1";
             this.button_ppt1.Size = new System.Drawing.Size(61, 65);
@@ -364,7 +251,7 @@
             // label_ppt2
             // 
             this.label_ppt2.AutoSize = true;
-            this.label_ppt2.Location = new System.Drawing.Point(49, 312);
+            this.label_ppt2.Location = new System.Drawing.Point(57, 312);
             this.label_ppt2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_ppt2.Name = "label_ppt2";
             this.label_ppt2.Size = new System.Drawing.Size(11, 18);
@@ -379,7 +266,7 @@
             this.button_ppt2.BackgroundImage = global::WindowsFormsApp11.Properties.Resources.pptICOn;
             this.button_ppt2.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.button_ppt2.Enabled = false;
-            this.button_ppt2.Location = new System.Drawing.Point(41, 244);
+            this.button_ppt2.Location = new System.Drawing.Point(50, 244);
             this.button_ppt2.Margin = new System.Windows.Forms.Padding(2);
             this.button_ppt2.Name = "button_ppt2";
             this.button_ppt2.Size = new System.Drawing.Size(61, 65);
@@ -391,7 +278,7 @@
             // label_ppt1
             // 
             this.label_ppt1.AutoSize = true;
-            this.label_ppt1.Location = new System.Drawing.Point(49, 212);
+            this.label_ppt1.Location = new System.Drawing.Point(57, 212);
             this.label_ppt1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label_ppt1.Name = "label_ppt1";
             this.label_ppt1.Size = new System.Drawing.Size(11, 18);
@@ -399,6 +286,24 @@
             this.label_ppt1.Text = "l";
             this.label_ppt1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label_ppt1.Visible = false;
+            // 
+            // label_name
+            // 
+            this.label_name.AutoSize = true;
+            this.label_name.Location = new System.Drawing.Point(65, 187);
+            this.label_name.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label_name.Name = "label_name";
+            this.label_name.Size = new System.Drawing.Size(67, 18);
+            this.label_name.TabIndex = 14;
+            this.label_name.Text = "Name :";
+            // 
+            // textBox_name
+            // 
+            this.textBox_name.Location = new System.Drawing.Point(136, 181);
+            this.textBox_name.Margin = new System.Windows.Forms.Padding(2);
+            this.textBox_name.Name = "textBox_name";
+            this.textBox_name.Size = new System.Drawing.Size(189, 28);
+            this.textBox_name.TabIndex = 13;
             // 
             // Client
             // 
@@ -413,6 +318,8 @@
             this.Controls.Add(this.textBox_PW);
             this.Controls.Add(this.textBox_Port);
             this.Controls.Add(this.label_Port);
+            this.Controls.Add(this.label_name);
+            this.Controls.Add(this.textBox_name);
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Client";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -444,20 +351,13 @@
         private System.Windows.Forms.Button button_ppt2;
         private System.Windows.Forms.Label label_ppt1;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.Button selectBtn1;
-        private System.Windows.Forms.TextBox ppt1pagenum;
-        private System.Windows.Forms.Button saveBtn1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Button saveBtn3;
-        private System.Windows.Forms.Button saveBtn2;
-        private System.Windows.Forms.Button selectBtn3;
-        private System.Windows.Forms.Button selectBtn2;
-        private System.Windows.Forms.TextBox ppt3pagenum;
-        private System.Windows.Forms.TextBox ppt2pagenum;
-        private System.Windows.Forms.Panel ppt3_panel;
-        private System.Windows.Forms.Panel ppt2_panel;
-        private System.Windows.Forms.Panel ppt1_panel;
+        private System.Windows.Forms.Button button_unlock;
+        private System.Windows.Forms.Button button_lock;
+        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private System.Windows.Forms.Label label_name;
+        private System.Windows.Forms.TextBox textBox_name;
     }
 }

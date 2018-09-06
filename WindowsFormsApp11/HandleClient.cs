@@ -17,8 +17,7 @@ namespace WindowsFormsApp11
 {
     class HandleClient
     {
-        //TcpClient client;
-        public int clientNum { get; set; }
+        public int clientNum { get; set; }   //클라이언트번호
 
         public TcpClient client { get; set; }
 
@@ -26,26 +25,42 @@ namespace WindowsFormsApp11
 
         public bool isUpload { get; set; }
 
-        public string fName { get; set; }
+        public string fName { get; set; }  //ppt파일명
+
+        public string name { get; set; }  //사용자이름
+
+        public bool isAddName { get; set; } 
+
+        public int lockPptNum { get; set; }  
+
+        public int lockPageNum { get; set; }
 
         public NetworkStream networkStream { get; set; }
 
-        public int lockPage { get; set; }
-
         public LockPacket lockPacket;
+        public ListPacket listPacket;
 
-        public void newClient(TcpClient client, int clientNum)
+        public void newClient(TcpClient client, int clientNum, string names)
         {
             this.client = client;
             this.clientNum = clientNum;
             this.isConnect = true;
             networkStream = client.GetStream();
 
+            //client이름들보내기
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("#"+names);
+            networkStream.Write(sendBytes, 0, sendBytes.Length);
+
             Thread thread = new Thread(handle);
             thread.IsBackground = true;
             thread.Start();
         }
-
+        public void AddList(string addName)
+        {
+            ///추가된client이름보내기
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("*" + addName);
+            networkStream.Write(sendBytes, 0, sendBytes.Length);
+        }
         public void Upload(int flag)
         {
             FileInfo file = new FileInfo(fName);
@@ -114,6 +129,14 @@ namespace WindowsFormsApp11
 
                     switch ((int)packet.type)
                     {
+                        case (int)PacketType.LISTVIEW:
+                            {
+                                listPacket = (ListPacket)Packet.Desserialize(buffer);
+                                this.name = listPacket.listName;
+                                isAddName = true;
+                                Console.WriteLine("handle listviewtype " + listPacket.listName);
+                                break;
+                            }
                         case (int)PacketType.UPLOAD:
                             {
                                 Console.WriteLine("handle upload type");
@@ -123,6 +146,7 @@ namespace WindowsFormsApp11
                         case (int)PacketType.LOCK:
                             {
                                 lockPacket = (LockPacket)Packet.Desserialize(buffer);
+                                lockPageNum = lockPacket.pageNum;
                                 Console.WriteLine("handle lock type" + lockPacket.pageNum);
                                 break;
                             }

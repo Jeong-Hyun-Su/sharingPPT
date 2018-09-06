@@ -31,6 +31,7 @@ namespace WindowsFormsApp11
         ///packet
         public UploadPacket uploadPacket;
         public LockPacket lockPacket;
+        public ListPacket listPacket;
 
         ///ppt
         const int maxPPT = 4;
@@ -63,13 +64,7 @@ namespace WindowsFormsApp11
             LabelPPT[2] = label_ppt2;
             // LabelPPT[3] = label_ppt3;
 
-            PanelPPT[0] = ppt1_panel;
-            PanelPPT[1] = ppt2_panel;
-            PanelPPT[2] = ppt3_panel;
-
-            TextBoxPage[0] = ppt1pagenum;
-            TextBoxPage[1] = ppt2pagenum;
-            TextBoxPage[2] = ppt3pagenum;
+            
 
 
         }
@@ -103,8 +98,24 @@ namespace WindowsFormsApp11
             client = new TcpClient();
             client.Connect(IP, port);
             stream = client.GetStream();
-            
 
+
+            //자신이름리스트에등록
+            ListViewItem li1 = new ListViewItem();
+            li1.Text = textBox_name.Text;
+            li1.SubItems.Add("");
+            li1.SubItems.Add("");
+            listView1.Items.Add(li1);
+
+            byte[] buffer = new byte[1024 * 4];
+            listPacket = new ListPacket();
+            listPacket.type = (int)PacketType.LISTVIEW;
+            listPacket.listName = textBox_name.Text;
+            Packet.Serialize(listPacket).CopyTo(buffer, 0);
+            stream.Write(buffer, 0, buffer.Length);
+
+
+            
             thread = new Thread(Socket_C);
             thread.Start();
 
@@ -122,9 +133,40 @@ namespace WindowsFormsApp11
                     byte[] ReadByte;
                     ReadByte = new byte[client.ReceiveBufferSize];
                     int BytesRead = stream.Read(ReadByte, 0, (int)ReadByte.Length);
+                    string str = Encoding.UTF8.GetString(ReadByte);
                     filename = Encoding.GetEncoding("ks_c_5601-1987").GetString(ReadByte, 0, BytesRead);
-                    if (filename != "")
+
+                    if (str[0] == '#')
                     {
+
+                        //이름리스트에등록
+                        Console.WriteLine("add servername " + str);
+                        string[] names = str.Split('/');
+                        for (int i = 0; i < names.Length-1; i++)
+                        {
+                            ListViewItem li = new ListViewItem();
+                            if (i == 0)
+                                li.Text = names[i].Substring(1, names[i].Length - 1);
+                            else
+                                li.Text = names[i];
+                            li.SubItems.Add("");
+                            li.SubItems.Add("");
+                            listView1.Items.Add(li);
+                        }
+
+                    }
+                    else if(str[0] == '*'){
+                        ///추가된client이름등록
+                        ListViewItem li = new ListViewItem();
+                        li.Text = str.Substring(1,str.Length-1);
+                        li.SubItems.Add("");
+                        li.SubItems.Add("");
+                        listView1.Items.Add(li);
+                    }
+                    else if (filename != "")
+                    {
+
+
                         ///packet.type = upload
                         byte[] buffer = new byte[1024 * 4];
                         uploadPacket = new UploadPacket();
@@ -175,9 +217,10 @@ namespace WindowsFormsApp11
                             ButtonPPT[IdxPPT].Tag = _Path + @"\" + filename;
                             LabelPPT[IdxPPT].Visible = true;
                             LabelPPT[IdxPPT].Text = Path.GetFileNameWithoutExtension(filename);
-                            PanelPPT[IdxPPT].Visible = false;
+
                             IdxPPT++;
                         });
+
                     }
                 }
             }
@@ -251,34 +294,9 @@ namespace WindowsFormsApp11
            */
         }
 
-        private void selectBtn1_Click(object sender, EventArgs e)
+        private void button_lock_Click(object sender, EventArgs e)
         {
-            SelectPage(0);
-        }
 
-        private void saveBtn1_Click(object sender, EventArgs e)
-        {
-            savePage(0);
-        }
-
-        private void selectBtn2_Click(object sender, EventArgs e)
-        {
-            SelectPage(1);
-        }
-
-        private void saveBtn2_Click(object sender, EventArgs e)
-        {
-            savePage(1);
-        }
-
-        private void selectBtn3_Click(object sender, EventArgs e)
-        {
-            SelectPage(2);
-        }
-
-        private void saveBtn3_Click(object sender, EventArgs e)
-        {
-            savePage(2);
         }
     }
 }

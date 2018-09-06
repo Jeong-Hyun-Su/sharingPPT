@@ -15,7 +15,8 @@ namespace ClassLibrary
     public enum PacketType : int
     {
         UPLOAD = 0,
-        LOCK
+        LOCK,
+        LISTVIEW
     }
 
     [Serializable]
@@ -53,9 +54,16 @@ namespace ClassLibrary
     {
         public int pageNum { get; set; }
     }
+
     [Serializable]
     public class UploadPacket : Packet
     {
         public bool isup { get; set; }
+    }
+
+    [Serializable]
+    public class ListPacket : Packet
+    {
+        public string listName { get; set; }
     }
 }
