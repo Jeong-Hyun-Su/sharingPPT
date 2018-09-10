@@ -134,7 +134,7 @@ namespace WindowsFormsApp11
                     ReadByte = new byte[client.ReceiveBufferSize];
                     int BytesRead = stream.Read(ReadByte, 0, (int)ReadByte.Length);
                     string str = Encoding.UTF8.GetString(ReadByte);
-                    filename = Encoding.GetEncoding("ks_c_5601-1987").GetString(ReadByte, 0, BytesRead);
+                    filename = Encoding.GetEncoding("utf-8").GetString(ReadByte, 0, BytesRead);
 
                     if (str[0] == '#')
                     {
@@ -177,17 +177,17 @@ namespace WindowsFormsApp11
                         Console.WriteLine("uploadpacket");
 
                         MessageBox.Show(filename);
-                        Byte[] sendBytes = Encoding.GetEncoding("ks_c_5601-1987").GetBytes(_Path + @"\" + filename);
+                        Byte[] sendBytes = Encoding.GetEncoding("utf-8").GetBytes(_Path + @"\" + filename);
                         stream.Write(sendBytes, 0, sendBytes.Length);
 
                         int ByteSize = 0;
                         Byte[] FileSizeBytes = new byte[client.ReceiveBufferSize];
                         ByteSize = stream.Read(FileSizeBytes, 0, FileSizeBytes.Length);
-                        int MaxFileLength = Convert.ToInt32(Encoding.ASCII.GetString(FileSizeBytes, 0, ByteSize));
+                        int MaxFileLength = Convert.ToInt32(Encoding.UTF8.GetString(FileSizeBytes, 0, ByteSize));
 
                         /*전송준비작업을 완료했다고 서버에 전해줌*/
                         byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
-                        ReadyTransBytes = Encoding.ASCII.GetBytes("READY");
+                        ReadyTransBytes = Encoding.UTF8.GetBytes("READY");
                         stream.Write(ReadyTransBytes, 0, ReadyTransBytes.Length);
 
                         FileStream fs = new FileStream(_Path + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);

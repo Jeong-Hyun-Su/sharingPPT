@@ -74,7 +74,7 @@ namespace WindowsFormsApp11
                     string[] filenames = fName.Split('\\');
                     string filename = filenames[filenames.Length - 1];
 
-                    Byte[] sendBytes = Encoding.ASCII.GetBytes(filename);
+                    Byte[] sendBytes = Encoding.UTF8.GetBytes(filename);
                     networkStream.Write(sendBytes, 0, sendBytes.Length);
                     Console.WriteLine("upload1");
                 }
@@ -83,11 +83,11 @@ namespace WindowsFormsApp11
                     byte[] ReadByte;
                     ReadByte = new byte[client.ReceiveBufferSize];
                     int BytesRead = networkStream.Read(ReadByte, 0, (int)ReadByte.Length);
-                    string serverFileName = Encoding.GetEncoding("ks_c_5601-1987").GetString(ReadByte, 0, BytesRead);
+                    string serverFileName = Encoding.GetEncoding("utf-8").GetString(ReadByte, 0, BytesRead);
                     Console.WriteLine("###" + serverFileName);
 
                     /*파일 사이즈를 클라이언트로 전달*/
-                    networkStream.Write(Encoding.ASCII.GetBytes(file.Length.ToString()), 0, Encoding.ASCII.GetBytes(file.Length.ToString()).Length);
+                    networkStream.Write(Encoding.UTF8.GetBytes(file.Length.ToString()), 0, Encoding.UTF8.GetBytes(file.Length.ToString()).Length);
 
                     /*클라이언트 측에서 준비되었는지 확인하고 준비되었다면 파일전송*/
                     int BytesRead2 = 0;
