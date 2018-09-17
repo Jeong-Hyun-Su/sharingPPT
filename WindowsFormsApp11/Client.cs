@@ -103,7 +103,7 @@ namespace WindowsFormsApp11
             li1.SubItems.Add("");
             listView1.Items.Add(li1);
 
-            ///packet으로 자신name 서버로 전송
+            /// 자신name 서버로 전송  //packetType = LISTVIEW
             byte[] buffer = new byte[1024 * 4];
             listPacket = new ListPacket();
             listPacket.type = (int)PacketType.LISTVIEW;
@@ -163,7 +163,7 @@ namespace WindowsFormsApp11
                     ///파일업로드
                     else if (filename != "")
                     {
-                        ///packet.type = upload
+                        ///upload시작한다고 server에게 전달 ///packetType = upload
                         byte[] buffer = new byte[1024 * 4];
                         uploadPacket = new UploadPacket();
                         uploadPacket.type = (int)PacketType.UPLOAD;
@@ -232,11 +232,10 @@ namespace WindowsFormsApp11
         {
             int pagenum = ppt[pptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
             TextBoxPage[pptNum].Text = pagenum.ToString();
-
-            //Send to Server
+            
+            ///lock한 ppt와page 넘버 서버에게전송 //packetType = LOCK
             try
             {
-
                 Console.WriteLine("select");
                 byte[] buffer = new byte[1024 * 4];
                 lockPacket = new LockPacket();
