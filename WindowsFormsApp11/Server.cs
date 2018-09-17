@@ -21,19 +21,17 @@ namespace WindowsFormsApp11
 {
     public partial class Server : Form
     {
-        ///socet
-        //Listener_Class listener;
-        //List<Client_Class> ClientList;
 
+        ///socket
         TcpListener listener;
-        List<HandleClient> clientList;
-        int nClient = 0;      //연결된클라이언트갯수
+        List<HandleClient> clientList;  
+        int nClient = 0;                //연결된클라이언트갯수
         Thread thread;
         Socket socket;
         
 
         ///ppt
-        const int maxPPT = 4;
+        const int maxPPT = 3;
         Button []ButtonPPT = new Button[maxPPT];
         Label[] LabelPPT = new Label[maxPPT];
         int IdxPPT = 0, curIdxPPT=0;
@@ -53,16 +51,13 @@ namespace WindowsFormsApp11
             label_IP.Text = Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString();
             
             clientList = new List<HandleClient>();
-            
 
             ButtonPPT[0] = button_ppt0;
             ButtonPPT[1] = button_ppt1;
             ButtonPPT[2] = button_ppt2;
-            //ButtonPPT[3] = button_ppt3;
             LabelPPT[0] = label_ppt0;
             LabelPPT[1] = label_ppt1;
             LabelPPT[2] = label_ppt2;
-           // LabelPPT[3] = label_ppt3;
 
         }
 
@@ -71,20 +66,21 @@ namespace WindowsFormsApp11
             panel1.Visible = true;
             panel1.Enabled = true;
            
-            //리스트 자신추가
+            //리스트뷰에 자신(서버)name 추가
             ListViewItem li = new ListViewItem();
             li.Text = textBox_name.Text;
             li.SubItems.Add("");
             li.SubItems.Add("");
             listView1.Items.Add(li);
             
+            //스레드시작
             thread = new Thread(StartServer);
             thread.Start();
         }
 
         private void StartServer()
         {
-            /////client 연결
+          
             int port = Convert.ToInt32(textBox_Port.Text);
             listener = new TcpListener(IPAddress.Any, port);
             TcpClient client ;
@@ -94,22 +90,24 @@ namespace WindowsFormsApp11
             {
                 try
                 {
-
+                    ///client 연결
                     client = listener.AcceptTcpClient();
-                    
                     HandleClient handleClient = new HandleClient();
 
+                    ///연결된 클라이언트 전 까지 연결된 클라이언트의 name들
                     string names=textBox_name.Text+"/";
                     for(int i=0; i<nClient; i++)
                     {
                         names = names + clientList[i].name + "/";
                     }
+
+                    ///clientList에 추가
                     handleClient.newClient(client, nClient,names);
                     clientList.Add(handleClient);
 
+                    ///연결된 클라이언트의 name 리스트뷰에추가 & 다른클라이언트들에게 보냄
                     while (true)
                     {
-                        ///리스트추가&보내기
                         if(clientList[nClient].isAddName == true)
                         {
                             ListViewItem li = new ListViewItem();
@@ -145,10 +143,10 @@ namespace WindowsFormsApp11
             listener.Stop();
             thread.Abort();
         }
-
+        
+        ///// PPT업로드 /////
         private void button_Upload_Click(object sender, EventArgs e)
         {
-            ////ppt 업로드 버튼
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 ButtonPPT[IdxPPT].Visible = true;
@@ -169,7 +167,8 @@ namespace WindowsFormsApp11
                 }
             }
         }
-
+        
+        /////PPT클릭하여 열기/////
         void ButtonPPT_Click(object sender, EventArgs e)
         {
             int idx = -1;
@@ -185,6 +184,7 @@ namespace WindowsFormsApp11
 
         }
 
+        /////lock버튼/////
         private void button_lock_Click(object sender, EventArgs e)
         {
             int pagenum = ppt[curIdxPPT].ActiveWindow.Selection.SlideRange.SlideNumber;

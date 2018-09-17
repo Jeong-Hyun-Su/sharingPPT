@@ -34,7 +34,7 @@ namespace WindowsFormsApp11
         public ListPacket listPacket;
 
         ///ppt
-        const int maxPPT = 4;
+        const int maxPPT = 3;
         Button[] ButtonPPT = new Button[maxPPT];
         Label[] LabelPPT = new Label[maxPPT];
         Panel[] PanelPPT = new Panel[maxPPT];
@@ -58,14 +58,10 @@ namespace WindowsFormsApp11
             ButtonPPT[0] = button_ppt0;
             ButtonPPT[1] = button_ppt1;
             ButtonPPT[2] = button_ppt2;
-            //ButtonPPT[3] = button_ppt3;
             LabelPPT[0] = label_ppt0;
             LabelPPT[1] = label_ppt1;
             LabelPPT[2] = label_ppt2;
-            // LabelPPT[3] = label_ppt3;
-
             
-
 
         }
 
@@ -100,13 +96,14 @@ namespace WindowsFormsApp11
             stream = client.GetStream();
 
 
-            //자신이름리스트에등록
+            ///자신이름리스트에등록
             ListViewItem li1 = new ListViewItem();
             li1.Text = textBox_name.Text;
             li1.SubItems.Add("");
             li1.SubItems.Add("");
             listView1.Items.Add(li1);
 
+            ///packet으로 자신name 서버로 전송
             byte[] buffer = new byte[1024 * 4];
             listPacket = new ListPacket();
             listPacket.type = (int)PacketType.LISTVIEW;
@@ -124,22 +121,22 @@ namespace WindowsFormsApp11
 
         private void Socket_C()
         {
-            Console.WriteLine("Socket_C");
+            Console.WriteLine("**** Socket_C ****");
             while (true)
             {
                 string filename;
                 if (stream.CanRead && stream.CanWrite)
                 {
+                    ///서버로부터 전송된 data 읽음
                     byte[] ReadByte;
                     ReadByte = new byte[client.ReceiveBufferSize];
                     int BytesRead = stream.Read(ReadByte, 0, (int)ReadByte.Length);
                     string str = Encoding.UTF8.GetString(ReadByte);
                     filename = Encoding.GetEncoding("utf-8").GetString(ReadByte, 0, BytesRead);
 
+                    ///server와 연결되있는client의 name들 리스트뷰에 등록
                     if (str[0] == '#')
                     {
-
-                        //이름리스트에등록
                         Console.WriteLine("add servername " + str);
                         string[] names = str.Split('/');
                         for (int i = 0; i < names.Length-1; i++)
@@ -155,18 +152,17 @@ namespace WindowsFormsApp11
                         }
 
                     }
+                    ///추가로 연결되는 client의 name 리스트뷰에 등록
                     else if(str[0] == '*'){
-                        ///추가된client이름등록
                         ListViewItem li = new ListViewItem();
                         li.Text = str.Substring(1,str.Length-1);
                         li.SubItems.Add("");
                         li.SubItems.Add("");
                         listView1.Items.Add(li);
                     }
+                    ///파일업로드
                     else if (filename != "")
                     {
-
-
                         ///packet.type = upload
                         byte[] buffer = new byte[1024 * 4];
                         uploadPacket = new UploadPacket();
@@ -185,7 +181,7 @@ namespace WindowsFormsApp11
                         ByteSize = stream.Read(FileSizeBytes, 0, FileSizeBytes.Length);
                         int MaxFileLength = Convert.ToInt32(Encoding.UTF8.GetString(FileSizeBytes, 0, ByteSize));
 
-                        /*전송준비작업을 완료했다고 서버에 전해줌*/
+                        ///전송준비작업을 완료했다고 서버에 전해줌
                         byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
                         ReadyTransBytes = Encoding.UTF8.GetBytes("READY");
                         stream.Write(ReadyTransBytes, 0, ReadyTransBytes.Length);
@@ -194,7 +190,6 @@ namespace WindowsFormsApp11
 
                         if (filename != string.Empty)
                         {
-
                             byte[] myReadBuffer = new byte[1024];
                             int numberOfBytesRead = 0;
 
