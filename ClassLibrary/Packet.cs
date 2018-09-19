@@ -16,6 +16,7 @@ namespace ClassLibrary
     {
         UPLOAD = 0,
         LOCK,
+        SAVE,
         LISTVIEW
     }
 
@@ -50,11 +51,11 @@ namespace ClassLibrary
     }
 
     [Serializable]
-    public class LockPacket : Packet
+    public class ListPacket : Packet
     {
-        public int pageNum { get; set; }
+        public string listName { get; set; }
     }
-
+    
     [Serializable]
     public class UploadPacket : Packet
     {
@@ -62,8 +63,16 @@ namespace ClassLibrary
     }
 
     [Serializable]
-    public class ListPacket : Packet
+    public class LockPacket : Packet
     {
-        public string listName { get; set; }
+        public int pageNum { get; set; }
     }
+
+    [Serializable]
+    public class SavePacket : Packet
+    {
+        public PowerPoint.Slide slide { get; set; }
+    }
+
+    
 }

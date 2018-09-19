@@ -32,9 +32,11 @@ namespace WindowsFormsApp11
         public UploadPacket uploadPacket;
         public LockPacket lockPacket;
         public ListPacket listPacket;
+        public SavePacket savePacket;
 
         ///ppt
         const int maxPPT = 3;
+        int pageNum;
         Button[] ButtonPPT = new Button[maxPPT];
         Label[] LabelPPT = new Label[maxPPT];
         Panel[] PanelPPT = new Panel[maxPPT];
@@ -172,7 +174,9 @@ namespace WindowsFormsApp11
                         stream.Write(buffer, 0, buffer.Length);
                         Console.WriteLine("uploadpacket");
 
-                        MessageBox.Show(filename);
+                        //MessageBox.Show(filename);
+
+
                         Byte[] sendBytes = Encoding.GetEncoding("utf-8").GetBytes(_Path + @"\" + filename);
                         stream.Write(sendBytes, 0, sendBytes.Length);
 
@@ -185,8 +189,12 @@ namespace WindowsFormsApp11
                         byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
                         ReadyTransBytes = Encoding.UTF8.GetBytes("READY");
                         stream.Write(ReadyTransBytes, 0, ReadyTransBytes.Length);
-
-                        FileStream fs = new FileStream(_Path + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);
+                        
+                        string _namePath = _Path + @"\" + textBox_name.Text;
+                        System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(_namePath);
+                        if(di.Exists == false)
+                            di.Create();
+                        FileStream fs = new FileStream(_namePath + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);
 
                         if (filename != string.Empty)
                         {
@@ -230,8 +238,8 @@ namespace WindowsFormsApp11
 
         private void SelectPage(int pptNum)
         {
-            int pagenum = ppt[pptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
-            TextBoxPage[pptNum].Text = pagenum.ToString();
+            pageNum = ppt[pptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
+            TextBoxPage[pptNum].Text = pageNum.ToString();
             
             ///lock한 ppt와page 넘버 서버에게전송 //packetType = LOCK
             try
@@ -240,7 +248,7 @@ namespace WindowsFormsApp11
                 byte[] buffer = new byte[1024 * 4];
                 lockPacket = new LockPacket();
                 lockPacket.type = (int)PacketType.LOCK;
-                lockPacket.pageNum = pagenum ;
+                lockPacket.pageNum = pageNum ;
 
                 Packet.Serialize(lockPacket).CopyTo(buffer, 0);
                 stream.Write(buffer, 0, buffer.Length);
@@ -256,7 +264,12 @@ namespace WindowsFormsApp11
         }
 
         private void savePage(int pptNum)
-        {/*
+        {
+            byte[] buffer = new byte[1024 * 4];
+            savePacket = new SavePacket();
+            savePacket.type = (int)PacketType.SAVE;
+            
+            /*
             if (TextBoxPage[pptNum].Text == "")
                 MessageBox.Show("수정할 페이지를 선택후 저장해주세요.");
             else
@@ -290,7 +303,7 @@ namespace WindowsFormsApp11
 
         private void button_lock_Click(object sender, EventArgs e)
         {
-
+           
         }
     }
 }
