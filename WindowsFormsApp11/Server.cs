@@ -89,6 +89,8 @@ namespace WindowsFormsApp11
                     if (clientList[i].askLock == true)
                     {
                         Console.WriteLine(i +": "  + clientList[i].lockPageNum);
+                        string name = clientList[i].name;
+                        string ppt = LabelPPT[clientList[i].lockPptNum].Text;
                         int pptNum = clientList[i].lockPptNum;
                         int pageNum = clientList[i].lockPageNum;
 
@@ -96,7 +98,11 @@ namespace WindowsFormsApp11
                         {
                             pptLockInfo[pptNum][pageNum] = i;
                             clientList[i].askLock = false;
-                            clientList[i].ChangdList();
+
+                            for(int j = 0; j < nClient; j++)
+                            {
+                                clientList[j].ChangdList(name, ppt, pageNum);
+                            }
                         }
                         else //해당 ppt의 page가  lock일 경우 초기화
                         {
