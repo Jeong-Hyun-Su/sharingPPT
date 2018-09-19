@@ -29,11 +29,14 @@ namespace WindowsFormsApp11
 
         public string name { get; set; }  //사용자이름
 
-        public bool isAddName { get; set; } 
+        public bool isAddName { get; set; }
 
-        public int lockPptNum { get; set; }  
+        public int lockPptNum { get; set; }
 
         public int lockPageNum { get; set; }
+
+        public bool askLock { get; set; }
+
 
         public NetworkStream networkStream { get; set; }
 
@@ -46,10 +49,11 @@ namespace WindowsFormsApp11
             this.clientNum = clientNum;
             this.isConnect = true;
             networkStream = client.GetStream();
-
+            
             //client이름들보내기
-            Byte[] sendBytes = Encoding.UTF8.GetBytes("#"+names);
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("#" + names);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
+            networkStream.Flush();
 
             Thread thread = new Thread(handle);
             thread.IsBackground = true;
@@ -61,6 +65,12 @@ namespace WindowsFormsApp11
             Byte[] sendBytes = Encoding.UTF8.GetBytes("*" + addName);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
         }
+        public void ChangdList()
+        {
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("c" + this.name+"/"+lockPptNum+"/"+ lockPageNum);
+            networkStream.Write(sendBytes, 0, sendBytes.Length);
+        }
+
         public void Upload(int flag)
         {
             FileInfo file = new FileInfo(fName);
@@ -147,7 +157,11 @@ namespace WindowsFormsApp11
                             {
                                 lockPacket = (LockPacket)Packet.Desserialize(buffer);
                                 lockPageNum = lockPacket.pageNum;
+                                lockPptNum = lockPacket.pptNum;
                                 Console.WriteLine("handle lock type" + lockPacket.pageNum);
+
+                                askLock = true;
+
                                 break;
                             }
                     }
@@ -163,5 +177,7 @@ namespace WindowsFormsApp11
                 }
             }
         }
+
+       
     }
 }

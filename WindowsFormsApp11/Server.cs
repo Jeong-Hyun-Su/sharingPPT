@@ -40,8 +40,7 @@ namespace WindowsFormsApp11
         PowerPoint.Application []ppt = new PowerPoint.Application[maxPPT];
         PowerPoint.Presentations []presentations = new PowerPoint.Presentations[maxPPT];
         PowerPoint.Presentation []presentation = new PowerPoint.Presentation[maxPPT];
-        //PowerPoint.Slides slides;
-        //PowerPoint.Slide slide;
+        List<List<int>> pptLockInfo = new List<List<int>>(maxPPT);
 
         public Server()
         {
@@ -80,6 +79,41 @@ namespace WindowsFormsApp11
             
             thread = new Thread(StartServer);
             thread.Start();
+
+            Thread lockThread = new Thread(checkLock);
+            lockThread.Start();
+        }
+
+        private void checkLock()
+        {
+            while(true)
+            {
+                for (int i = 0; i < nClient; i++)
+                {
+                    if (clientList[i].askLock == true)
+                    {
+                        Console.WriteLine(i +": "  + clientList[i].lockPageNum);
+                        int pptNum = clientList[i].lockPptNum;
+                        int pageNum = clientList[i].lockPageNum;
+
+                        if (pptLockInfo[pptNum][pageNum] == -1)//해당 ppt의 page가 unlock일 경우
+                        {
+                            pptLockInfo[pptNum][pageNum] = i;
+                            clientList[i].askLock = false;
+                            clientList[i].ChangdList();
+                        }
+                        else //해당 ppt의 page가  lock일 경우 초기화
+                        {
+                            clientList[i].askLock = false;
+                            clientList[i].lockPageNum = -1;
+                            clientList[i].lockPptNum = -1;
+                        }
+                        
+                    }
+                }
+                
+            }
+
         }
 
         private void StartServer()
@@ -99,12 +133,13 @@ namespace WindowsFormsApp11
                     
                     HandleClient handleClient = new HandleClient();
 
+                    string name = textBox_name.Text;
                     string names=textBox_name.Text+"/";
                     for(int i=0; i<nClient; i++)
                     {
                         names = names + clientList[i].name + "/";
                     }
-                    handleClient.newClient(client, nClient,names);
+                    handleClient.newClient(client, nClient, names);
                     clientList.Add(handleClient);
 
                     while (true)
@@ -124,6 +159,7 @@ namespace WindowsFormsApp11
                             }
                             break;
                         }
+                        
                     }
                     nClient++;
                     Invoke((MethodInvoker)delegate
@@ -131,7 +167,7 @@ namespace WindowsFormsApp11
                         label1.Text = nClient.ToString();
                     });
                     
-                    
+
                 }
                 catch (Exception ex)
                 {
@@ -156,9 +192,18 @@ namespace WindowsFormsApp11
                 ButtonPPT[IdxPPT].Tag = openFileDialog1.FileName;
                 LabelPPT[IdxPPT].Visible = true;
                 LabelPPT[IdxPPT].Text = Path.GetFileNameWithoutExtension(openFileDialog1.SafeFileName);
+               
+                pptLockInfo.Add(new List<int>());
+               
+                //리스트 초기화 -> 피피티 슬라이드 수만큼 초기화하도록 바꿔야함
+                for (int i=0;i<30;i++)
+                {
+                    pptLockInfo[IdxPPT].Add(-1);
+                }
+
                 IdxPPT++;
-                
-                for(int i=0; i<nClient; i++)
+
+                for (int i=0; i<nClient; i++)
                 {
                     if (clientList[i].isConnect == true)
                     {

@@ -53,6 +53,7 @@ namespace ClassLibrary
     public class LockPacket : Packet
     {
         public int pageNum { get; set; }
+        public int pptNum { get; set; }
     }
 
     [Serializable]

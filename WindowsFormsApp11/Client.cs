@@ -38,7 +38,6 @@ namespace WindowsFormsApp11
         Button[] ButtonPPT = new Button[maxPPT];
         Label[] LabelPPT = new Label[maxPPT];
         Panel[] PanelPPT = new Panel[maxPPT];
-        TextBox[] TextBoxPage = new TextBox[maxPPT];
 
         int IdxPPT = 0;
         PowerPoint.Application[] ppt = new PowerPoint.Application[maxPPT];
@@ -151,7 +150,13 @@ namespace WindowsFormsApp11
                                 li.Text = names[i];
                             li.SubItems.Add("");
                             li.SubItems.Add("");
-                            listView1.Items.Add(li);
+
+                            Invoke((MethodInvoker)delegate
+                            {
+                                listView1.Items.Add(li);
+                            });
+
+                           
                         }
 
                     }
@@ -162,6 +167,25 @@ namespace WindowsFormsApp11
                         li.SubItems.Add("");
                         li.SubItems.Add("");
                         listView1.Items.Add(li);
+                    }
+                    else if(str[0]== 'c')
+                    {
+                        string[] info = str.Split('/');
+                        string name = info[0].Substring(1, info[0].Length - 1);
+                        string pptnum = info[1];
+                        string pagenum = info[2];
+                        
+                        for (int i = 0; i < listView1.Items.Count; i++)
+                        {
+                            ListViewItem item = listView1.Items[i];
+                            bool isContains = item.SubItems[0].Text.Contains(name);
+                            if (isContains)
+                            {
+                                item.SubItems[1].Text = pptnum;
+                                item.SubItems[2].Text = pagenum;
+                                break;
+                            }
+                        }
                     }
                     else if (filename != "")
                     {
@@ -221,6 +245,7 @@ namespace WindowsFormsApp11
                             IdxPPT++;
                         });
 
+
                     }
                 }
             }
@@ -236,16 +261,15 @@ namespace WindowsFormsApp11
         private void SelectPage(int pptNum)
         {
             int pagenum = ppt[pptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
-            TextBoxPage[pptNum].Text = pagenum.ToString();
-
+            
             //Send to Server
             try
             {
-
                 Console.WriteLine("select");
                 byte[] buffer = new byte[1024 * 4];
                 lockPacket = new LockPacket();
                 lockPacket.type = (int)PacketType.LOCK;
+                lockPacket.pptNum = pptNum;
                 lockPacket.pageNum = pagenum ;
 
                 Packet.Serialize(lockPacket).CopyTo(buffer, 0);
@@ -296,7 +320,8 @@ namespace WindowsFormsApp11
 
         private void button_lock_Click(object sender, EventArgs e)
         {
-
+            SelectPage(0);
         }
+        
     }
 }
