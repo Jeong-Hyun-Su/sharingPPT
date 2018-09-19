@@ -17,19 +17,19 @@ namespace WindowsFormsApp11
 {
     class HandleClient
     {
-        public int clientNum { get; set; }   //클라이언트번호
+        public int clientNum { get; set; }      //클라이언트번호
 
-        public TcpClient client { get; set; }
+        public TcpClient client { get; set; }   //연결된client
 
         public bool isConnect { get; set; }
 
         public bool isUpload { get; set; }
 
-        public string fName { get; set; }  //ppt파일명
+        public string fName { get; set; }       //ppt파일명
 
-        public string name { get; set; }  //사용자이름
+        public string name { get; set; }        //사용자이름
 
-        public bool isAddName { get; set; }
+        public bool isAddName { get; set; }   
 
         public int lockPptNum { get; set; }
 
@@ -43,15 +43,16 @@ namespace WindowsFormsApp11
         public LockPacket lockPacket;
         public ListPacket listPacket;
 
+        
         public void newClient(TcpClient client, int clientNum, string names)
         {
             this.client = client;
             this.clientNum = clientNum;
             this.isConnect = true;
             networkStream = client.GetStream();
-            
-            //client이름들보내기
-            Byte[] sendBytes = Encoding.UTF8.GetBytes("#" + names);
+
+            ///현재 이전의 연결된client의 name들 을 client로 전송
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("#"+names);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
             networkStream.Flush();
 
@@ -59,9 +60,10 @@ namespace WindowsFormsApp11
             thread.IsBackground = true;
             thread.Start();
         }
+
+        /////추가로연결된 client의 name client로 전송/////
         public void AddList(string addName)
         {
-            ///추가된client이름보내기
             Byte[] sendBytes = Encoding.UTF8.GetBytes("*" + addName);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
         }
@@ -79,6 +81,7 @@ namespace WindowsFormsApp11
 
             if (networkStream.CanWrite && networkStream.CanRead)
             {
+                ///파일이름 client에게 전송
                 if (flag == 1)
                 {
                     string[] filenames = fName.Split('\\');
@@ -86,8 +89,9 @@ namespace WindowsFormsApp11
 
                     Byte[] sendBytes = Encoding.UTF8.GetBytes(filename);
                     networkStream.Write(sendBytes, 0, sendBytes.Length);
-                    Console.WriteLine("upload1");
+                    Console.WriteLine("upload1 complete");
                 }
+                ///파일 client에게 전송
                 else if (flag == 2)
                 {
                     byte[] ReadByte;
@@ -96,10 +100,10 @@ namespace WindowsFormsApp11
                     string serverFileName = Encoding.GetEncoding("utf-8").GetString(ReadByte, 0, BytesRead);
                     Console.WriteLine("###" + serverFileName);
 
-                    /*파일 사이즈를 클라이언트로 전달*/
+                    ///파일 사이즈를 클라이언트로 전달
                     networkStream.Write(Encoding.UTF8.GetBytes(file.Length.ToString()), 0, Encoding.UTF8.GetBytes(file.Length.ToString()).Length);
 
-                    /*클라이언트 측에서 준비되었는지 확인하고 준비되었다면 파일전송*/
+                    ///클라이언트 측에서 준비되었는지 확인하고 준비되었다면 파일전송
                     int BytesRead2 = 0;
                     byte[] ConfirmByte = new byte[client.ReceiveBufferSize];
                     BytesRead2 = networkStream.Read(ConfirmByte, 0, (int)ConfirmByte.Length);
@@ -112,7 +116,7 @@ namespace WindowsFormsApp11
                         fs.Read(FileBytes, 0, FileBytes.Length);
                         networkStream.Write(FileBytes, 0, FileBytes.Length);
                     }
-                    Console.WriteLine("upload2");
+                    Console.WriteLine("upload2 complete");
                 }
                 fs.Flush();
                 fs.Close();
