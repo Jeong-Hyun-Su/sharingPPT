@@ -317,7 +317,7 @@ namespace WindowsFormsApp11
             }
            */
         }
-
+          
         private void button_lock_Click(object sender, EventArgs e)
         {
             SelectPage(0);

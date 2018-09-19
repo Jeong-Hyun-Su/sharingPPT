@@ -62,7 +62,7 @@ namespace WindowsFormsApp11
             LabelPPT[1] = label_ppt1;
             LabelPPT[2] = label_ppt2;
            // LabelPPT[3] = label_ppt3;
-
+            
         }
 
         private void button_Make_Click(object sender, EventArgs e)

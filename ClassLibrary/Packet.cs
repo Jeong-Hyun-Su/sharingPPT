@@ -62,7 +62,7 @@ namespace ClassLibrary
         public bool isup { get; set; }
     }
 
-    [Serializable]
+    [Serializable] 
     public class ListPacket : Packet
     {
         public string listName { get; set; }

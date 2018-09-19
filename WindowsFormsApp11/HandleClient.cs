@@ -116,7 +116,7 @@ namespace WindowsFormsApp11
                 }
                 fs.Flush();
                 fs.Close();
-            }
+            }  
             networkStream.Flush();
             // networkStream.Close();
 
