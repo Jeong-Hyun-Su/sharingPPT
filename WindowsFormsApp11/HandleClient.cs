@@ -71,7 +71,7 @@ namespace WindowsFormsApp11
         {
             Byte[] sendBytes = Encoding.UTF8.GetBytes("c" + name + "/"+ pptnum + "/"+ pagenum);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
-        }
+        } 
 
         public void Upload(int flag)
         {

@@ -234,7 +234,7 @@ namespace WindowsFormsApp11
 
         }
 
-        /////lock버튼/////
+        /////lock버튼///// 
         private void button_lock_Click(object sender, EventArgs e)
         {
             int pagenum = ppt[curIdxPPT].ActiveWindow.Selection.SlideRange.SlideNumber;

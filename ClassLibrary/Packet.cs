@@ -16,7 +16,8 @@ namespace ClassLibrary
     {
         UPLOAD = 0,
         LOCK,
-        LISTVIEW
+        LISTVIEW,
+        SLIDE
     }
 
     [Serializable]
@@ -54,6 +55,14 @@ namespace ClassLibrary
     {
         public int pageNum { get; set; }
         public int pptNum { get; set; }
+    }
+
+
+    [Serializable]
+    public class SlidePacket : Packet
+    {
+        public PowerPoint.Slide slideObject { get; set; }
+        
     }
 
     [Serializable]

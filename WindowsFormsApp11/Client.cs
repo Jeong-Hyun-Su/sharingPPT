@@ -194,8 +194,7 @@ namespace WindowsFormsApp11
                         Packet.Serialize(uploadPacket).CopyTo(buffer, 0);
                         stream.Write(buffer, 0, buffer.Length);
                         Console.WriteLine("uploadpacket");
-
-                        MessageBox.Show(filename);
+                        
                         Byte[] sendBytes = Encoding.GetEncoding("utf-8").GetBytes(_Path + @"\" + filename);
                         stream.Write(sendBytes, 0, sendBytes.Length);
 
@@ -208,6 +207,11 @@ namespace WindowsFormsApp11
                         byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
                         ReadyTransBytes = Encoding.UTF8.GetBytes("READY");
                         stream.Write(ReadyTransBytes, 0, ReadyTransBytes.Length);
+
+                        _Path = _Path + @"\" + textBox_name.Text;
+                        System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(_Path);
+                        if (di.Exists == false)
+                            di.Create();
 
                         FileStream fs = new FileStream(_Path + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);
 
@@ -280,36 +284,30 @@ namespace WindowsFormsApp11
         }
 
         private void savePage(int pptNum)
-        {/*
-            if (TextBoxPage[pptNum].Text == "")
-                MessageBox.Show("수정할 페이지를 선택후 저장해주세요.");
-            else
+        {
+            /*int pagenum = 1;
+            try
             {
-                int pagenum = Int32.Parse(TextBoxPage[pptNum].Text);
-                try
-                {
-                    byte[] buffer = new byte[1024 * 4];
+                byte[] buffer = new byte[1024 * 4];
 
-                    SlidePacket pSlide = new SlidePacket();
-                    pSlide.packet_Type = (int)PacketType.SAVESLIDE;
-                    pSlide.pptNum = pptNum;
-                    pSlide.pageNum = pagenum;
-                    pSlide.slide = presentation[pptNum].Slides[pagenum];
+                SlidePacket slidePacket = new SlidePacket();
+                slidePacket.type = (int)PacketType.SLIDE;
+                PowerPoint.Slide slide = presentation[pptNum].Slides[pagenum];
+                //slidePacket.slideObject = presentation[pptNum].Slides[pagenum];
 
-                    Packet.Serialize(pSlide).CopyTo(buffer, 0);
+                Packet.Serialize(slidePacket).CopyTo(buffer, 0);
 
-                    stream.Write(buffer, 0, buffer.Length);
-                    stream.Flush();
+                stream.Write(buffer, 0, buffer.Length);
+                stream.Flush();
+                
 
-                    TextBoxPage[pptNum].Text = "";
-
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("savePage() 에러 : " + e.Message);
-                }
             }
-           */
+            catch (Exception e)
+            {
+                Console.WriteLine("savePage() 에러 : " + e.Message);
+            }
+            */
+           
         }
           
         private void button_lock_Click(object sender, EventArgs e)
