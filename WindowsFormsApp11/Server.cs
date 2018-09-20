@@ -257,6 +257,7 @@ namespace WindowsFormsApp11
                             clientList[i].askLock = false;
                             clientList[i].lockPageNum = -1;
                             clientList[i].lockPptNum = -1;
+                            clientList[i].LockFail();
                         }
 
                     }
@@ -284,6 +285,7 @@ namespace WindowsFormsApp11
                             this.askLock = false;
                             this.lockPageNum = -1;
                             this.lockPptNum = -1;
+                            MessageBox.Show("다른사용자가 편집중인 슬라이드입니다");
                         }
                     }
                 }

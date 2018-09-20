@@ -182,6 +182,10 @@ namespace WindowsFormsApp11
                             }
                         });
                     }
+                    else if(str[0] == 'f')
+                    {
+                        MessageBox.Show("다른사용자가 편집중인 슬라이드입니다");
+                    }
                     else if (filename != "") 
                     {
                         ///upload시작한다고 server에게 전달 ///packetType = upload
@@ -266,7 +270,7 @@ namespace WindowsFormsApp11
                 lockPacket.type = (int)PacketType.LOCK;
                 lockPacket.pptNum = pptNum;
                 lockPacket.pageNum = pagenum ;
-
+                
                 Packet.Serialize(lockPacket).CopyTo(buffer, 0);
                 stream.Write(buffer, 0, buffer.Length);
                 

@@ -43,6 +43,7 @@ namespace WindowsFormsApp11
         public LockPacket lockPacket;
         public ListPacket listPacket;
 
+        public Thread thread;
         
         public void newClient(TcpClient client, int clientNum, string names)
         {
@@ -56,7 +57,7 @@ namespace WindowsFormsApp11
             networkStream.Write(sendBytes, 0, sendBytes.Length);
             networkStream.Flush();
 
-            Thread thread = new Thread(handle);
+            thread = new Thread(handle);
             thread.IsBackground = true;
             thread.Start();
         }
@@ -166,7 +167,7 @@ namespace WindowsFormsApp11
                                 Console.WriteLine("handle lock type" + lockPacket.pageNum);
 
                                 askLock = true;
-
+                                
                                 break;
                             }
                     }
@@ -178,11 +179,18 @@ namespace WindowsFormsApp11
             {
                 if (client.Connected == false)
                 {
+                    Console.WriteLine("connected end");
                     isConnect = false;
+                    thread.Abort();
+                    client.Close();
                 }
             }
         }
 
-       
+        public void LockFail()
+        {
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("f" + "fail");
+            networkStream.Write(sendBytes, 0, sendBytes.Length);
+        }
     }
 }
