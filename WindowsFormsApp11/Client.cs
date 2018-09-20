@@ -32,7 +32,7 @@ namespace WindowsFormsApp11
         public UploadPacket uploadPacket;
         public LockPacket lockPacket;
         public ListPacket listPacket;
-        public SavePacket savePacket;
+        //public SavePacket savePacket;
 
         ///ppt
         const int maxPPT = 3;
@@ -237,7 +237,7 @@ namespace WindowsFormsApp11
                         {
                             ButtonPPT[IdxPPT].Visible = true;
                             ButtonPPT[IdxPPT].Enabled = true;
-                            ButtonPPT[IdxPPT].Tag = _Path + @"\" + filename;
+                            ButtonPPT[IdxPPT].Tag = _namePath + @"\" + filename;
                             LabelPPT[IdxPPT].Visible = true;
                             LabelPPT[IdxPPT].Text = Path.GetFileNameWithoutExtension(filename);
 
