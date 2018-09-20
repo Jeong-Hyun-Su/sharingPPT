@@ -40,6 +40,13 @@ namespace WindowsFormsApp11
         PowerPoint.Presentation []presentation = new PowerPoint.Presentation[maxPPT];
         List<List<int>> pptLockInfo = new List<List<int>>(maxPPT);
 
+        //server lock관련 변수
+        bool askLock;
+        int lockPptNum;
+        int lockPageNum;
+        string name;
+
+
         public Server()
         {
             InitializeComponent();
@@ -71,7 +78,9 @@ namespace WindowsFormsApp11
             li.SubItems.Add("");
             li.SubItems.Add("");
             listView1.Items.Add(li);
-            
+
+            this.name = textBox_name.Text;
+
             //스레드시작
             thread = new Thread(StartServer);
             thread.Start();
@@ -79,44 +88,7 @@ namespace WindowsFormsApp11
             Thread lockThread = new Thread(checkLock);
             lockThread.Start();
         }
-
-        private void checkLock()
-        {
-            while(true)
-            {
-                for (int i = 0; i < nClient; i++)
-                {
-                    if (clientList[i].askLock == true)
-                    {
-                        Console.WriteLine(i +": "  + clientList[i].lockPageNum);
-                        string name = clientList[i].name;
-                        string ppt = LabelPPT[clientList[i].lockPptNum].Text;
-                        int pptNum = clientList[i].lockPptNum;
-                        int pageNum = clientList[i].lockPageNum;
-
-                        if (pptLockInfo[pptNum][pageNum] == -1)//해당 ppt의 page가 unlock일 경우
-                        {
-                            pptLockInfo[pptNum][pageNum] = i;
-                            clientList[i].askLock = false;
-
-                            for(int j = 0; j < nClient; j++)
-                            {
-                                clientList[j].ChangdList(name, ppt, pageNum);
-                            }
-                        }
-                        else //해당 ppt의 page가  lock일 경우 초기화
-                        {
-                            clientList[i].askLock = false;
-                            clientList[i].lockPageNum = -1;
-                            clientList[i].lockPptNum = -1;
-                        }
-                        
-                    }
-                }
-                
-            }
-
-        }
+        
 
         private void StartServer()
         {
@@ -234,12 +206,100 @@ namespace WindowsFormsApp11
 
         }
 
+
         /////lock버튼///// 
         private void button_lock_Click(object sender, EventArgs e)
         {
-            int pagenum = ppt[curIdxPPT].ActiveWindow.Selection.SlideRange.SlideNumber;
-            listView1.Items[0].SubItems[1].Text = curIdxPPT.ToString();
-            listView1.Items[0].SubItems[2].Text = pagenum.ToString();
+            this.lockPptNum = 0;
+            this.lockPageNum = ppt[0].ActiveWindow.Selection.SlideRange.SlideNumber;
+            this.askLock = true;
+            Console.WriteLine(this.lockPageNum);
+           
+        }
+
+
+        private void checkLock()
+        {
+            while (true)
+            {
+                for (int i = 0; i < nClient; i++)
+                {
+                    string name, ppt;
+                    int pptNum, pageNum;
+
+                    if (clientList[i].askLock == true)
+                    {
+                        Console.WriteLine(i + ": " + clientList[i].lockPageNum);
+
+                        name = clientList[i].name;
+                        ppt = LabelPPT[clientList[i].lockPptNum].Text;
+                        pptNum = clientList[i].lockPptNum;
+                        pageNum = clientList[i].lockPageNum;
+                        
+
+                        if (pptLockInfo[pptNum][pageNum] == -1)//해당 ppt의 page가 unlock일 경우
+                        {
+                            pptLockInfo[pptNum][pageNum] = i;
+                            clientList[i].askLock = false;
+
+                            for (int j = 0; j < nClient; j++)
+                            {
+                                clientList[j].ChangeList(name, ppt, pageNum);
+                            }
+                        }
+                        else //해당 ppt의 page가  lock일 경우 초기화
+                        {
+                            clientList[i].askLock = false;
+                            clientList[i].lockPageNum = -1;
+                            clientList[i].lockPptNum = -1;
+                        }
+
+                    }
+                    if( this.askLock == true )
+                    {
+                        Console.WriteLine(this.name + ": " + this.lockPageNum);
+                        name = this.name;
+                        ppt = LabelPPT[this.lockPptNum].Text;
+                        pptNum = this.lockPptNum;
+                        pageNum = this.lockPageNum;
+
+                        if (pptLockInfo[pptNum][pageNum] == -1)//해당 ppt의 page가 unlock일 경우
+                        {
+                            pptLockInfo[pptNum][pageNum] = i;
+                            this.askLock = false;
+
+                            this.ChangeList();
+                            for (int j = 0; j < nClient; j++)
+                            {
+                                clientList[j].ChangeList(name, ppt, pageNum); 
+                            }
+                        }
+                        else //해당 ppt의 page가  lock일 경우 초기화
+                        {
+                            this.askLock = false;
+                            this.lockPageNum = -1;
+                            this.lockPptNum = -1;
+                        }
+                    }
+                }
+
+            }
+
+        }
+
+        void ChangeList()
+        {
+            for (int i = 0; i < listView1.Items.Count; i++)
+            {
+                ListViewItem item = listView1.Items[i];
+                bool isContains = item.SubItems[0].Text.Contains(this.name);
+                if (isContains)
+                {
+                    item.SubItems[1].Text = this.lockPptNum.ToString();
+                    item.SubItems[2].Text = this.lockPageNum.ToString(); 
+                    break;
+                }
+            }
         }
     }
 }

@@ -186,7 +186,7 @@ namespace WindowsFormsApp11
                             }
                         }
                     }
-                    else if (filename != "")
+                    else if (filename != "") 
                     {
                         ///upload시작한다고 server에게 전달 ///packetType = upload
                         byte[] buffer = new byte[1024 * 4];

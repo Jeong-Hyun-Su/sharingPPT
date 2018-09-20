@@ -67,7 +67,7 @@ namespace WindowsFormsApp11
             Byte[] sendBytes = Encoding.UTF8.GetBytes("*" + addName);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
         }
-        public void ChangdList(string name, string pptnum, int pagenum)
+        public void ChangeList(string name, string pptnum, int pagenum)
         {
             Byte[] sendBytes = Encoding.UTF8.GetBytes("c" + name + "/"+ pptnum + "/"+ pagenum);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
