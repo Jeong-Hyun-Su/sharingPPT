@@ -126,7 +126,11 @@ namespace WindowsFormsApp11
                             li.Text = clientList[nClient].name;
                             li.SubItems.Add("");
                             li.SubItems.Add("");
-                            listView1.Items.Add(li);
+
+                            Invoke((MethodInvoker)delegate
+                            {
+                                listView1.Items.Add(li);
+                            });
 
                             for(int i=0; i<nClient; i++)
                             {
@@ -214,7 +218,7 @@ namespace WindowsFormsApp11
             this.lockPageNum = ppt[0].ActiveWindow.Selection.SlideRange.SlideNumber;
             this.askLock = true;
             Console.WriteLine(this.lockPageNum);
-           
+
         }
 
 
@@ -242,6 +246,7 @@ namespace WindowsFormsApp11
                             pptLockInfo[pptNum][pageNum] = i;
                             clientList[i].askLock = false;
 
+                            this.ChangeList(name, ppt, pageNum);
                             for (int j = 0; j < nClient; j++)
                             {
                                 clientList[j].ChangeList(name, ppt, pageNum);
@@ -268,7 +273,7 @@ namespace WindowsFormsApp11
                             pptLockInfo[pptNum][pageNum] = i;
                             this.askLock = false;
 
-                            this.ChangeList();
+                            this.ChangeList(name, ppt, pageNum);
                             for (int j = 0; j < nClient; j++)
                             {
                                 clientList[j].ChangeList(name, ppt, pageNum); 
@@ -287,19 +292,22 @@ namespace WindowsFormsApp11
 
         }
 
-        void ChangeList()
+        public void ChangeList(string name, string pptname, int pagenum)
         {
-            for (int i = 0; i < listView1.Items.Count; i++)
+            Invoke((MethodInvoker)delegate
             {
-                ListViewItem item = listView1.Items[i];
-                bool isContains = item.SubItems[0].Text.Contains(this.name);
-                if (isContains)
+                for (int i = 0; i < listView1.Items.Count; i++)
                 {
-                    item.SubItems[1].Text = this.lockPptNum.ToString();
-                    item.SubItems[2].Text = this.lockPageNum.ToString(); 
-                    break;
+                    ListViewItem item = listView1.Items[i];
+                    bool isContains = item.SubItems[0].Text.Contains(name);
+                    if (isContains)
+                    {
+                        item.SubItems[1].Text = pptname;
+                        item.SubItems[2].Text = pagenum.ToString();
+                        break;
+                    }
                 }
-            }
+            });
         }
     }
 }

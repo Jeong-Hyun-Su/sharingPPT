@@ -138,17 +138,18 @@
             // button_unlock
             // 
             this.button_unlock.Location = new System.Drawing.Point(258, 27);
-            this.button_unlock.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_unlock.Margin = new System.Windows.Forms.Padding(2);
             this.button_unlock.Name = "button_unlock";
             this.button_unlock.Size = new System.Drawing.Size(77, 46);
             this.button_unlock.TabIndex = 16;
             this.button_unlock.Text = "save";
             this.button_unlock.UseVisualStyleBackColor = true;
+            this.button_unlock.Click += new System.EventHandler(this.button_unlock_Click);
             // 
             // button_lock
             // 
             this.button_lock.Location = new System.Drawing.Point(167, 27);
-            this.button_lock.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button_lock.Margin = new System.Windows.Forms.Padding(2);
             this.button_lock.Name = "button_lock";
             this.button_lock.Size = new System.Drawing.Size(77, 46);
             this.button_lock.TabIndex = 15;
@@ -167,7 +168,7 @@
             this.listView1.ForeColor = System.Drawing.SystemColors.WindowText;
             this.listView1.GridLines = true;
             this.listView1.Location = new System.Drawing.Point(154, 81);
-            this.listView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.listView1.Margin = new System.Windows.Forms.Padding(2);
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(202, 242);
             this.listView1.TabIndex = 14;

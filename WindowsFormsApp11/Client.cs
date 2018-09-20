@@ -1,20 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Net;
-using System.Net.Sockets;
-using System.Configuration;
-using System.IO;
-using System.Threading;
+﻿using ClassLibrary;
 using Microsoft.Office.Core;
+using System;
+using System.IO;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
+using System.Windows.Forms;
+using System.Xml;
 using PowerPoint = Microsoft.Office.Interop.PowerPoint;
-using ClassLibrary;
 
 namespace WindowsFormsApp11
 {
@@ -173,18 +166,21 @@ namespace WindowsFormsApp11
                         string name = info[0].Substring(1, info[0].Length - 1);
                         string pptnum = info[1];
                         string pagenum = info[2];
-                        
-                        for (int i = 0; i < listView1.Items.Count; i++)
+
+                        Invoke((MethodInvoker)delegate
                         {
-                            ListViewItem item = listView1.Items[i];
-                            bool isContains = item.SubItems[0].Text.Contains(name);
-                            if (isContains)
+                            for (int i = 0; i < listView1.Items.Count; i++)
                             {
-                                item.SubItems[1].Text = pptnum;
-                                item.SubItems[2].Text = pagenum;
-                                break;
+                                ListViewItem item = listView1.Items[i];
+                                bool isContains = item.SubItems[0].Text.Contains(name);
+                                if (isContains)
+                                {
+                                    item.SubItems[1].Text = pptnum;
+                                    item.SubItems[2].Text = pagenum;
+                                    break;
+                                }
                             }
-                        }
+                        });
                     }
                     else if (filename != "") 
                     {
@@ -286,37 +282,43 @@ namespace WindowsFormsApp11
 
         private void savePage(int pptNum)
         {
-            /*int pagenum = 1;
+            int pagenum = 1;
+            PowerPoint.Slide slide = presentation[pptNum].Slides[pagenum];
+            
             try
             {
-                byte[] buffer = new byte[1024 * 4];
+                /*byte[] buffer = new byte[1024 * 4];
 
                     SlidePacket pSlide = new SlidePacket();
-                    pSlide.packet_Type = (int)PacketType.SAVESLIDE;
-                    pSlide.pptNum = pptNum;
-                    pSlide.pageNum = pagenum;
+                    pSlide.type = (int)PacketType.SAVE;
                     pSlide.slide = presentation[pptNum].Slides[pagenum];
 
                     Packet.Serialize(pSlide).CopyTo(buffer, 0);
 
                     stream.Write(buffer, 0, buffer.Length);
                     stream.Flush();
+                    */
+                //SlideObject slideObject = new SlideObject(pagenum, slide);
 
-                    TextBoxPage[pptNum].Text = "";
+                //FileSerializer.Serialize(_Path + @"\"+"slide1.dat", slideObject);
 
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("savePage() 에러 : " + e.Message);
-                }
             }
-           */
+            catch (Exception e)
+            {
+                Console.WriteLine("savePage() 에러 : " + e.Message);
+            }
+            
+           
         }
           
         private void button_lock_Click(object sender, EventArgs e)
         {
             SelectPage(0);
         }
-        
+
+        private void button_unlock_Click(object sender, EventArgs e)
+        {
+            savePage(0);
+        }
     }
 }
