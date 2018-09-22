@@ -40,7 +40,7 @@ namespace WindowsFormsApp11
         PowerPoint.Presentation []presentation = new PowerPoint.Presentation[maxPPT];
         List<List<int>> pptLockInfo = new List<List<int>>(maxPPT);
 
-        //server lock관련 변수
+        ///server lock관련 변수
         bool askLock;
         int lockPptNum;
         int lockPageNum;
@@ -117,6 +117,16 @@ namespace WindowsFormsApp11
                     handleClient.newClient(client, nClient,names);
                     clientList.Add(handleClient);
 
+                    ///전에 업로드된 ppt갯수 값 설정
+                    if (IdxPPT > 0)
+                    {
+                        clientList[nClient].beforeUploadNum = IdxPPT;
+                    }
+                    else
+                    {
+                        clientList[nClient].beforeUploadNum = 0;
+                    }
+
                     ///연결된 클라이언트의 name 리스트뷰에추가 & 다른클라이언트들에게 보냄
                     while (true)
                     {
@@ -140,6 +150,33 @@ namespace WindowsFormsApp11
                         }
                         
                     }
+                    while (true)
+                    {
+                        if (clientList[nClient].beforeUploadNum > 0)
+                        {
+                            Console.WriteLine("??");
+                            int num = clientList[nClient].beforeUploadNum;
+                            for (int j = 0; j < num; j++)
+                            {
+                                if (clientList[nClient].isConnect == true)
+                                {
+                                    clientList[nClient].fName = ButtonPPT[j].Tag.ToString();
+                                    clientList[nClient].isUpload = true;
+                                    clientList[nClient].Upload(1);
+
+                                    while (clientList[nClient].isUpload)
+                                        ;
+                                    Thread.Sleep(500);
+                                }
+                            }
+                            clientList[nClient].beforeUploadNum = 0;
+                            break;
+                        }
+                        else
+
+                            break;
+                    }
+
                     nClient++;
                     Invoke((MethodInvoker)delegate
                     {
@@ -221,7 +258,7 @@ namespace WindowsFormsApp11
 
         }
 
-
+        ////각 ppt의 locking 제어///
         private void checkLock()
         {
             while (true)
@@ -231,6 +268,7 @@ namespace WindowsFormsApp11
                     string name, ppt;
                     int pptNum, pageNum;
 
+                    ///lock을 요청한 클라이언트
                     if (clientList[i].askLock == true)
                     {
                         Console.WriteLine(i + ": " + clientList[i].lockPageNum);
@@ -261,7 +299,7 @@ namespace WindowsFormsApp11
                         }
 
                     }
-                    if( this.askLock == true )
+                    if( this.askLock == true ) //서버자신이 lock을 요청했을 경우
                     {
                         Console.WriteLine(this.name + ": " + this.lockPageNum);
                         name = this.name;

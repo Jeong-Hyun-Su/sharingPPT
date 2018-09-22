@@ -13,12 +13,12 @@ namespace WindowsFormsApp11
 {
     public partial class Client : Form
     {
-        TcpClient client ;
+        TcpClient client;
         NetworkStream stream;
         Thread thread;
         string _Path;
-       
-        
+
+
         string clientNum = "";
 
         ///packet
@@ -43,7 +43,7 @@ namespace WindowsFormsApp11
         {
             InitializeComponent();
         }
-        
+
 
         private void Client_Load(object sender, EventArgs e)
         {
@@ -55,7 +55,7 @@ namespace WindowsFormsApp11
             LabelPPT[0] = label_ppt0;
             LabelPPT[1] = label_ppt1;
             LabelPPT[2] = label_ppt2;
-            
+
 
         }
 
@@ -71,7 +71,7 @@ namespace WindowsFormsApp11
             ppt[idx] = new PowerPoint.Application();
             presentations[idx] = ppt[idx].Presentations;
             presentation[idx] = presentations[idx].Open(ButtonPPT[idx].Tag.ToString(), MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoCTrue);
-            
+
         }
 
         private void button_Enter_Click(object sender, EventArgs e)
@@ -81,7 +81,7 @@ namespace WindowsFormsApp11
             panel2.Parent = panel1;
             panel2.Visible = true;
             panel2.Enabled = true;
-            
+
 
             string IP = textBox1_IP.Text;
             int port = Convert.ToInt32(textBox_Port.Text);
@@ -106,11 +106,11 @@ namespace WindowsFormsApp11
             stream.Write(buffer, 0, buffer.Length);
 
 
-            
+
             thread = new Thread(Socket_C);
             thread.Start();
 
-            
+
         }
 
         private void Socket_C()
@@ -133,7 +133,7 @@ namespace WindowsFormsApp11
                     {
                         Console.WriteLine("add servername " + str);
                         string[] names = str.Split('/');
-                        for (int i = 0; i < names.Length-1; i++)
+                        for (int i = 0; i < names.Length - 1; i++)
                         {
                             ListViewItem li = new ListViewItem();
                             if (i == 0)
@@ -148,19 +148,23 @@ namespace WindowsFormsApp11
                                 listView1.Items.Add(li);
                             });
 
-                           
+
                         }
 
                     }
                     ///추가로 연결되는 client의 name 리스트뷰에 등록
-                    else if(str[0] == '*'){
+                    else if (str[0] == '*')
+                    {
                         ListViewItem li = new ListViewItem();
-                        li.Text = str.Substring(1,str.Length-1);
+                        li.Text = str.Substring(1, str.Length - 1);
                         li.SubItems.Add("");
                         li.SubItems.Add("");
-                        listView1.Items.Add(li);
+                        Invoke((MethodInvoker)delegate
+                        {
+                            listView1.Items.Add(li);
+                        });
                     }
-                    else if(str[0]== 'c')
+                    else if (str[0] == 'c')
                     {
                         string[] info = str.Split('/');
                         string name = info[0].Substring(1, info[0].Length - 1);
@@ -182,11 +186,11 @@ namespace WindowsFormsApp11
                             }
                         });
                     }
-                    else if(str[0] == 'f')
+                    else if (str[0] == 'f')
                     {
                         MessageBox.Show("다른사용자가 편집중인 슬라이드입니다");
                     }
-                    else if (filename != "") 
+                    else if (filename != "")
                     {
                         ///upload시작한다고 server에게 전달 ///packetType = upload
                         byte[] buffer = new byte[1024 * 4];
@@ -196,7 +200,7 @@ namespace WindowsFormsApp11
                         Packet.Serialize(uploadPacket).CopyTo(buffer, 0);
                         stream.Write(buffer, 0, buffer.Length);
                         Console.WriteLine("uploadpacket");
-                        
+
                         Byte[] sendBytes = Encoding.GetEncoding("utf-8").GetBytes(_Path + @"\" + filename);
                         stream.Write(sendBytes, 0, sendBytes.Length);
 
@@ -209,10 +213,10 @@ namespace WindowsFormsApp11
                         byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
                         ReadyTransBytes = Encoding.UTF8.GetBytes("READY");
                         stream.Write(ReadyTransBytes, 0, ReadyTransBytes.Length);
-                        
+
                         string _namePath = _Path + @"\" + textBox_name.Text;
                         System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(_namePath);
-                        if(di.Exists == false)
+                        if (di.Exists == false)
                             di.Create();
                         FileStream fs = new FileStream(_namePath + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);
 
@@ -255,12 +259,12 @@ namespace WindowsFormsApp11
             client.Close();
             thread.Abort();
         }
-        
+
 
         private void SelectPage(int pptNum)
         {
             int pagenum = ppt[pptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
-            
+
             ///lock한 ppt와page 넘버 서버에게전송 //packetType = LOCK
             try
             {
@@ -269,11 +273,11 @@ namespace WindowsFormsApp11
                 lockPacket = new LockPacket();
                 lockPacket.type = (int)PacketType.LOCK;
                 lockPacket.pptNum = pptNum;
-                lockPacket.pageNum = pagenum ;
-                
+                lockPacket.pageNum = pagenum;
+
                 Packet.Serialize(lockPacket).CopyTo(buffer, 0);
                 stream.Write(buffer, 0, buffer.Length);
-                
+
                 stream.Flush();
 
             }
@@ -281,24 +285,21 @@ namespace WindowsFormsApp11
             {
                 Console.WriteLine("SelectPage() 에러 : " + e.Message);
             }
-            
+
         }
 
         private void savePage(int pptNum)
         {
             int pagenum = 1;
             PowerPoint.Slide slide = presentation[pptNum].Slides[pagenum];
-            
+
             try
             {
                 /*byte[] buffer = new byte[1024 * 4];
-
                     SlidePacket pSlide = new SlidePacket();
                     pSlide.type = (int)PacketType.SAVE;
                     pSlide.slide = presentation[pptNum].Slides[pagenum];
-
                     Packet.Serialize(pSlide).CopyTo(buffer, 0);
-
                     stream.Write(buffer, 0, buffer.Length);
                     stream.Flush();
                     */
@@ -311,10 +312,10 @@ namespace WindowsFormsApp11
             {
                 Console.WriteLine("savePage() 에러 : " + e.Message);
             }
-            
-           
+
+
         }
-          
+
         private void button_lock_Click(object sender, EventArgs e)
         {
             SelectPage(0);

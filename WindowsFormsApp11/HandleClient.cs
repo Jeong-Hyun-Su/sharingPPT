@@ -29,7 +29,7 @@ namespace WindowsFormsApp11
 
         public string name { get; set; }        //사용자이름
 
-        public bool isAddName { get; set; }   
+        public bool isAddName { get; set; }
 
         public int lockPptNum { get; set; }
 
@@ -37,6 +37,7 @@ namespace WindowsFormsApp11
 
         public bool askLock { get; set; }
 
+        public int beforeUploadNum { get; set; }
 
         public NetworkStream networkStream { get; set; }
 
@@ -44,7 +45,7 @@ namespace WindowsFormsApp11
         public ListPacket listPacket;
 
         public Thread thread;
-        
+
         public void newClient(TcpClient client, int clientNum, string names)
         {
             this.client = client;
@@ -53,7 +54,7 @@ namespace WindowsFormsApp11
             networkStream = client.GetStream();
 
             ///현재 이전의 연결된client의 name들 을 client로 전송
-            Byte[] sendBytes = Encoding.UTF8.GetBytes("#"+names);
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("#" + names);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
             networkStream.Flush();
 
@@ -71,9 +72,9 @@ namespace WindowsFormsApp11
 
         public void ChangeList(string name, string pptname, int pagenum)
         {
-            Byte[] sendBytes = Encoding.UTF8.GetBytes("c" + name + "/"+ pptname + "/"+ pagenum);
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("c" + name + "/" + pptname + "/" + pagenum);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
-        } 
+        }
 
         public void Upload(int flag)
         {
@@ -119,10 +120,11 @@ namespace WindowsFormsApp11
                         networkStream.Write(FileBytes, 0, FileBytes.Length);
                     }
                     Console.WriteLine("upload2 complete");
+                    this.isUpload = false;
                 }
                 fs.Flush();
                 fs.Close();
-            }  
+            }
             networkStream.Flush();
             // networkStream.Close();
 
@@ -167,7 +169,7 @@ namespace WindowsFormsApp11
                                 Console.WriteLine("handle lock type" + lockPacket.pageNum);
 
                                 askLock = true;
-                                
+
                                 break;
                             }
                     }
