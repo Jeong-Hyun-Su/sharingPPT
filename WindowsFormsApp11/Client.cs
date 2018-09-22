@@ -164,6 +164,7 @@ namespace WindowsFormsApp11
                             listView1.Items.Add(li);
                         });
                     }
+                    ///다른 클라이언트의 lock값 변경
                     else if (str[0] == 'c')
                     {
                         string[] info = str.Split('/');
@@ -186,6 +187,7 @@ namespace WindowsFormsApp11
                             }
                         });
                     }
+                    ///lock실패했을경우
                     else if (str[0] == 'f')
                     {
                         MessageBox.Show("다른사용자가 편집중인 슬라이드입니다");

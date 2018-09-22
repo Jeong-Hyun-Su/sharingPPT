@@ -150,11 +150,11 @@ namespace WindowsFormsApp11
                         }
                         
                     }
+                    ///늦게들어온 클라이언트 파일 전송
                     while (true)
                     {
                         if (clientList[nClient].beforeUploadNum > 0)
                         {
-                            Console.WriteLine("??");
                             int num = clientList[nClient].beforeUploadNum;
                             for (int j = 0; j < num; j++)
                             {
@@ -164,7 +164,7 @@ namespace WindowsFormsApp11
                                     clientList[nClient].isUpload = true;
                                     clientList[nClient].Upload(1);
 
-                                    while (clientList[nClient].isUpload)
+                                    while (clientList[nClient].isUpload) //클라이언트가 받고있는중
                                         ;
                                     Thread.Sleep(500);
                                 }
@@ -173,7 +173,6 @@ namespace WindowsFormsApp11
                             break;
                         }
                         else
-
                             break;
                     }
 

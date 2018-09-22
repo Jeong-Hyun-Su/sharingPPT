@@ -120,7 +120,9 @@ namespace WindowsFormsApp11
                         networkStream.Write(FileBytes, 0, FileBytes.Length);
                     }
                     Console.WriteLine("upload2 complete");
-                    this.isUpload = false;
+                   
+                    //파일 전송이 모두 끝났음
+                    this.isUpload = false; 
                 }
                 fs.Flush();
                 fs.Close();
