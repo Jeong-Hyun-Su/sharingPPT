@@ -54,7 +54,7 @@ namespace WindowsFormsApp11
             networkStream = client.GetStream();
 
             ///현재 이전의 연결된client의 name들 을 client로 전송
-            Byte[] sendBytes = Encoding.UTF8.GetBytes("#" + names);
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("NAME#/" + names);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
             networkStream.Flush();
 
@@ -66,13 +66,13 @@ namespace WindowsFormsApp11
         /////추가로연결된 client의 name client로 전송/////
         public void AddList(string addName)
         {
-            Byte[] sendBytes = Encoding.UTF8.GetBytes("*" + addName);
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("NAME*" + addName);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
         }
 
         public void ChangeList(string name, string pptname, int pagenum)
         {
-            Byte[] sendBytes = Encoding.UTF8.GetBytes("c" + name + "/" + pptname + "/" + pagenum);
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("CHANGE@/" + name + "/" + pptname + "/" + pagenum);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
         }
 
@@ -193,7 +193,7 @@ namespace WindowsFormsApp11
 
         public void LockFail()
         {
-            Byte[] sendBytes = Encoding.UTF8.GetBytes("f" + "fail");
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("FAIL@" + "fail");
             networkStream.Write(sendBytes, 0, sendBytes.Length);
         }
     }

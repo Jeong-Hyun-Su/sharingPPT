@@ -34,11 +34,13 @@
             this.label_PW = new System.Windows.Forms.Label();
             this.button_Make = new System.Windows.Forms.Button();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.button_unlock = new System.Windows.Forms.Button();
             this.button_Upload = new System.Windows.Forms.Button();
-            this.label_IP = new System.Windows.Forms.Label();
+            this.button_lock = new System.Windows.Forms.Button();
+            this.listView1 = new System.Windows.Forms.ListView();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.panel2 = new System.Windows.Forms.Panel();
             this.button_ppt0 = new System.Windows.Forms.Button();
             this.label_ppt0 = new System.Windows.Forms.Label();
@@ -46,15 +48,13 @@
             this.label_ppt2 = new System.Windows.Forms.Label();
             this.button_ppt2 = new System.Windows.Forms.Button();
             this.label_ppt1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.button_unlock = new System.Windows.Forms.Button();
-            this.button_lock = new System.Windows.Forms.Button();
-            this.listView1 = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.textBox_name = new System.Windows.Forms.TextBox();
             this.label_name = new System.Windows.Forms.Label();
+            this.label_IP = new System.Windows.Forms.TextBox();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.SuspendLayout();
@@ -122,35 +122,14 @@
             this.panel1.TabIndex = 5;
             this.panel1.Visible = false;
             // 
-            // label3
+            // button_unlock
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(283, 9);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(140, 18);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "현재접속자 수 : ";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(20, 9);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(40, 18);
-            this.label2.TabIndex = 8;
-            this.label2.Text = "IP : ";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(435, 9);
-            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(18, 18);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "0";
+            this.button_unlock.Location = new System.Drawing.Point(324, 32);
+            this.button_unlock.Name = "button_unlock";
+            this.button_unlock.Size = new System.Drawing.Size(96, 55);
+            this.button_unlock.TabIndex = 19;
+            this.button_unlock.Text = "save";
+            this.button_unlock.UseVisualStyleBackColor = true;
             // 
             // button_Upload
             // 
@@ -163,15 +142,48 @@
             this.button_Upload.UseVisualStyleBackColor = true;
             this.button_Upload.Click += new System.EventHandler(this.button_Upload_Click);
             // 
-            // label_IP
+            // button_lock
             // 
-            this.label_IP.AutoSize = true;
-            this.label_IP.Location = new System.Drawing.Point(83, 9);
-            this.label_IP.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label_IP.Name = "label_IP";
-            this.label_IP.Size = new System.Drawing.Size(54, 18);
-            this.label_IP.TabIndex = 6;
-            this.label_IP.Text = "label2";
+            this.button_lock.Location = new System.Drawing.Point(210, 32);
+            this.button_lock.Name = "button_lock";
+            this.button_lock.Size = new System.Drawing.Size(96, 55);
+            this.button_lock.TabIndex = 18;
+            this.button_lock.Text = "lock";
+            this.button_lock.UseVisualStyleBackColor = true;
+            this.button_lock.Click += new System.EventHandler(this.button_lock_Click);
+            // 
+            // listView1
+            // 
+            this.listView1.BackColor = System.Drawing.SystemColors.ControlLight;
+            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.listView1.Font = new System.Drawing.Font("굴림", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
+            this.listView1.ForeColor = System.Drawing.SystemColors.WindowText;
+            this.listView1.GridLines = true;
+            this.listView1.Location = new System.Drawing.Point(191, 97);
+            this.listView1.Name = "listView1";
+            this.listView1.Size = new System.Drawing.Size(251, 290);
+            this.listView1.TabIndex = 17;
+            this.listView1.TileSize = new System.Drawing.Size(30, 40);
+            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.listView1.View = System.Windows.Forms.View.Details;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "이름";
+            this.columnHeader1.Width = 57;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "PPT";
+            this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.columnHeader2.Width = 50;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "PAGE";
             // 
             // panel2
             // 
@@ -270,61 +282,39 @@
             this.label_ppt1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.label_ppt1.Visible = false;
             // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(283, 9);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(140, 18);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "현재접속자 수 : ";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(20, 9);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(40, 18);
+            this.label2.TabIndex = 8;
+            this.label2.Text = "IP : ";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(435, 9);
+            this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(18, 18);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "0";
+            // 
             // openFileDialog1
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
-            // 
-            // button_unlock
-            // 
-            this.button_unlock.Location = new System.Drawing.Point(324, 32);
-            this.button_unlock.Name = "button_unlock";
-            this.button_unlock.Size = new System.Drawing.Size(96, 55);
-            this.button_unlock.TabIndex = 19;
-            this.button_unlock.Text = "save";
-            this.button_unlock.UseVisualStyleBackColor = true;
-            // 
-            // button_lock
-            // 
-            this.button_lock.Location = new System.Drawing.Point(210, 32);
-            this.button_lock.Name = "button_lock";
-            this.button_lock.Size = new System.Drawing.Size(96, 55);
-            this.button_lock.TabIndex = 18;
-            this.button_lock.Text = "lock";
-            this.button_lock.UseVisualStyleBackColor = true;
-            this.button_lock.Click += new System.EventHandler(this.button_lock_Click);
-            // 
-            // listView1
-            // 
-            this.listView1.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2,
-            this.columnHeader3});
-            this.listView1.Font = new System.Drawing.Font("굴림", 8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(129)));
-            this.listView1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.listView1.GridLines = true;
-            this.listView1.Location = new System.Drawing.Point(191, 97);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(251, 290);
-            this.listView1.TabIndex = 17;
-            this.listView1.TileSize = new System.Drawing.Size(30, 40);
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "이름";
-            this.columnHeader1.Width = 57;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "PPT";
-            this.columnHeader2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.columnHeader2.Width = 50;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "PAGE";
             // 
             // textBox_name
             // 
@@ -344,11 +334,19 @@
             this.label_name.TabIndex = 10;
             this.label_name.Text = "Name :";
             // 
+            // label_IP
+            // 
+            this.label_IP.Location = new System.Drawing.Point(57, 3);
+            this.label_IP.Name = "label_IP";
+            this.label_IP.Size = new System.Drawing.Size(205, 28);
+            this.label_IP.TabIndex = 12;
+            // 
             // Server
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(10F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(478, 444);
+            this.Controls.Add(this.label_IP);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.panel1);
@@ -356,7 +354,6 @@
             this.Controls.Add(this.button_Make);
             this.Controls.Add(this.label_PW);
             this.Controls.Add(this.textBox_PW);
-            this.Controls.Add(this.label_IP);
             this.Controls.Add(this.textBox_Port);
             this.Controls.Add(this.label_Port);
             this.Controls.Add(this.textBox_name);
@@ -384,7 +381,6 @@
         private System.Windows.Forms.Button button_Make;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label_IP;
         private System.Windows.Forms.Button button_Upload;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.Button button_ppt1;
@@ -404,5 +400,6 @@
         private System.Windows.Forms.ColumnHeader columnHeader3;
         private System.Windows.Forms.TextBox textBox_name;
         private System.Windows.Forms.Label label_name;
+        private System.Windows.Forms.TextBox label_IP;
     }
 }

@@ -127,19 +127,16 @@ namespace WindowsFormsApp11
                     int BytesRead = stream.Read(ReadByte, 0, (int)ReadByte.Length);
                     string str = Encoding.UTF8.GetString(ReadByte);
                     filename = Encoding.GetEncoding("utf-8").GetString(ReadByte, 0, BytesRead);
-
+                    
                     ///server와 연결되있는client의 name들 리스트뷰에 등록
-                    if (str[0] == '#')
+                    if (str.Substring(0,5) == "NAME#")
                     {
                         Console.WriteLine("add servername " + str);
                         string[] names = str.Split('/');
-                        for (int i = 0; i < names.Length - 1; i++)
+                        for (int i = 1; i < names.Length - 1; i++)
                         {
                             ListViewItem li = new ListViewItem();
-                            if (i == 0)
-                                li.Text = names[i].Substring(1, names[i].Length - 1);
-                            else
-                                li.Text = names[i];
+                            li.Text = names[i];
                             li.SubItems.Add("");
                             li.SubItems.Add("");
 
@@ -153,10 +150,10 @@ namespace WindowsFormsApp11
 
                     }
                     ///추가로 연결되는 client의 name 리스트뷰에 등록
-                    else if (str[0] == '*')
+                    else if (str.Substring(0, 5) == "NAME*")
                     {
                         ListViewItem li = new ListViewItem();
-                        li.Text = str.Substring(1, str.Length - 1);
+                        li.Text = str.Substring(5, str.Length-5);
                         li.SubItems.Add("");
                         li.SubItems.Add("");
                         Invoke((MethodInvoker)delegate
@@ -165,12 +162,12 @@ namespace WindowsFormsApp11
                         });
                     }
                     ///다른 클라이언트의 lock값 변경
-                    else if (str[0] == 'c')
+                    else if (str.Substring(0, 7) == "CHANGE@")
                     {
                         string[] info = str.Split('/');
-                        string name = info[0].Substring(1, info[0].Length - 1);
-                        string pptnum = info[1];
-                        string pagenum = info[2];
+                        string name = info[1];
+                        string pptnum = info[2];
+                        string pagenum = info[3];
 
                         Invoke((MethodInvoker)delegate
                         {
@@ -188,7 +185,7 @@ namespace WindowsFormsApp11
                         });
                     }
                     ///lock실패했을경우
-                    else if (str[0] == 'f')
+                    else if (str.Substring(0, 5) == "FAIL@")
                     {
                         MessageBox.Show("다른사용자가 편집중인 슬라이드입니다");
                     }
