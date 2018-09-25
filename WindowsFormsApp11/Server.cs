@@ -42,6 +42,7 @@ namespace WindowsFormsApp11
 
         ///server lock관련 변수
         bool askLock;
+        bool askSave;
         int lockPptNum;
         int lockPageNum;
         string name;
@@ -264,7 +265,7 @@ namespace WindowsFormsApp11
             {
                 for (int i = 0; i < nClient; i++)
                 {
-                    string name, ppt;
+                    string name, pptN;
                     int pptNum, pageNum;
 
                     ///lock을 요청한 클라이언트
@@ -273,7 +274,7 @@ namespace WindowsFormsApp11
                         Console.WriteLine(i + ": " + clientList[i].lockPageNum);
 
                         name = clientList[i].name;
-                        ppt = LabelPPT[clientList[i].lockPptNum].Text;
+                        pptN = LabelPPT[clientList[i].lockPptNum].Text;
                         pptNum = clientList[i].lockPptNum;
                         pageNum = clientList[i].lockPageNum;
                         
@@ -283,10 +284,10 @@ namespace WindowsFormsApp11
                             pptLockInfo[pptNum][pageNum] = i;
                             clientList[i].askLock = false;
 
-                            this.ChangeList(name, ppt, pageNum);
+                            this.ChangeList(name, pptN, pageNum);
                             for (int j = 0; j < nClient; j++)
                             {
-                                clientList[j].ChangeList(name, ppt, pageNum);
+                                clientList[j].ChangeList(name, pptN, pageNum.ToString());
                             }
                         }
                         else //해당 ppt의 page가  lock일 경우 초기화
@@ -302,7 +303,7 @@ namespace WindowsFormsApp11
                     {
                         Console.WriteLine(this.name + ": " + this.lockPageNum);
                         name = this.name;
-                        ppt = LabelPPT[this.lockPptNum].Text;
+                        pptN = LabelPPT[this.lockPptNum].Text;
                         pptNum = this.lockPptNum;
                         pageNum = this.lockPageNum;
 
@@ -311,10 +312,10 @@ namespace WindowsFormsApp11
                             pptLockInfo[pptNum][pageNum] = i;
                             this.askLock = false;
 
-                            this.ChangeList(name, ppt, pageNum);
+                            this.ChangeList(name, pptN, pageNum);
                             for (int j = 0; j < nClient; j++)
                             {
-                                clientList[j].ChangeList(name, ppt, pageNum); 
+                                clientList[j].ChangeList(name, pptN, pageNum.ToString()); 
                             }
                         }
                         else //해당 ppt의 page가  lock일 경우 초기화
@@ -324,6 +325,46 @@ namespace WindowsFormsApp11
                             this.lockPptNum = -1;
                             MessageBox.Show("다른사용자가 편집중인 슬라이드입니다");
                         }
+                    }
+
+                    ///save요청한클라이언트
+                    if(clientList[i].askSave == true)
+                    {
+                        
+                        Console.WriteLine("client -> server  : askSave");
+                        int savePptNum = clientList[i].savePptNum;
+                        
+                        
+                        //int curSlideIdx = ppt[savePptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
+                        PowerPoint.Slides tempSlides = presentation[savePptNum].Slides;
+
+                        if (clientList[i].isAddSlide)
+                        {
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].lockPageNum-1, 1, 1);
+                        }
+                        else
+                        {
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].lockPageNum, 1, 1);
+                            tempSlides[clientList[i].lockPageNum].Delete();
+                        }
+
+                        //tempSlides[curSlideIdx].Select();
+                        //Console.WriteLine("FFFFFFFFF" + curSlideIdx);
+
+                        ChangeList(clientList[i].name, "", -1);
+
+                        //다른클라이언트들에게변경된파일을보냄
+                        for (int j=0; j<nClient; j++)
+                        {
+                            clientList[j].ChangeList(clientList[i].name, "","");
+                            if (i == j)
+                                ;
+                            else
+                                clientList[j].SendSaveFile(clientList[i].saveFileName);
+                        }
+                        //File.Delete(clientList[i].saveFileName);
+                        clientList[i].askSave = false;
+
                     }
                 }
 
@@ -342,7 +383,10 @@ namespace WindowsFormsApp11
                     if (isContains)
                     {
                         item.SubItems[1].Text = pptname;
-                        item.SubItems[2].Text = pagenum.ToString();
+                        if (pagenum == -1)
+                            item.SubItems[2].Text = "";
+                        else
+                            item.SubItems[2].Text = pagenum.ToString();
                         break;
                     }
                 }

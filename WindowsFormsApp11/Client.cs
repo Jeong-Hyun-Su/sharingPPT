@@ -17,6 +17,7 @@ namespace WindowsFormsApp11
         NetworkStream stream;
         Thread thread;
         string _Path;
+        string _namePath;
 
 
         string clientNum = "";
@@ -25,11 +26,11 @@ namespace WindowsFormsApp11
         public UploadPacket uploadPacket;
         public LockPacket lockPacket;
         public ListPacket listPacket;
-        //public SavePacket savePacket;
+        public SavePacket savePacket;
 
         ///ppt
         const int maxPPT = 3;
-        int pageNum;
+        int savePageNum, lockPageNum, savePptNum, lockPptNum;
         Button[] ButtonPPT = new Button[maxPPT];
         Label[] LabelPPT = new Label[maxPPT];
         Panel[] PanelPPT = new Panel[maxPPT];
@@ -38,6 +39,7 @@ namespace WindowsFormsApp11
         PowerPoint.Application[] ppt = new PowerPoint.Application[maxPPT];
         PowerPoint.Presentations[] presentations = new PowerPoint.Presentations[maxPPT];
         PowerPoint.Presentation[] presentation = new PowerPoint.Presentation[maxPPT];
+        int[] slideCnt = new int[maxPPT];
 
         public Client()
         {
@@ -71,7 +73,7 @@ namespace WindowsFormsApp11
             ppt[idx] = new PowerPoint.Application();
             presentations[idx] = ppt[idx].Presentations;
             presentation[idx] = presentations[idx].Open(ButtonPPT[idx].Tag.ToString(), MsoTriState.msoFalse, MsoTriState.msoFalse, MsoTriState.msoCTrue);
-
+            slideCnt[idx] = presentation[idx].Slides.Count;
         }
 
         private void button_Enter_Click(object sender, EventArgs e)
@@ -213,7 +215,7 @@ namespace WindowsFormsApp11
                         ReadyTransBytes = Encoding.UTF8.GetBytes("READY");
                         stream.Write(ReadyTransBytes, 0, ReadyTransBytes.Length);
 
-                        string _namePath = _Path + @"\" + textBox_name.Text;
+                        _namePath = _Path + @"\" + textBox_name.Text;
                         System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(_namePath);
                         if (di.Exists == false)
                             di.Create();
@@ -262,7 +264,8 @@ namespace WindowsFormsApp11
 
         private void SelectPage(int pptNum)
         {
-            int pagenum = ppt[pptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
+            lockPptNum = pptNum;
+            lockPageNum = ppt[pptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
 
             ///lock한 ppt와page 넘버 서버에게전송 //packetType = LOCK
             try
@@ -272,7 +275,7 @@ namespace WindowsFormsApp11
                 lockPacket = new LockPacket();
                 lockPacket.type = (int)PacketType.LOCK;
                 lockPacket.pptNum = pptNum;
-                lockPacket.pageNum = pagenum;
+                lockPacket.pageNum = lockPageNum;
 
                 Packet.Serialize(lockPacket).CopyTo(buffer, 0);
                 stream.Write(buffer, 0, buffer.Length);
@@ -289,22 +292,56 @@ namespace WindowsFormsApp11
 
         private void savePage(int pptNum)
         {
-            int pagenum = 1;
-            PowerPoint.Slide slide = presentation[pptNum].Slides[pagenum];
+            savePptNum = pptNum;
+            savePageNum = ppt[pptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
 
+            //save와lock다른경우
+            if ((savePageNum != lockPageNum) || (savePptNum != lockPptNum))
+            {
+                MessageBox.Show(lockPageNum + "의 slide를 수정완료먼저해주세요");
+                return;
+            }
+            
             try
             {
-                /*byte[] buffer = new byte[1024 * 4];
-                    SlidePacket pSlide = new SlidePacket();
-                    pSlide.type = (int)PacketType.SAVE;
-                    pSlide.slide = presentation[pptNum].Slides[pagenum];
-                    Packet.Serialize(pSlide).CopyTo(buffer, 0);
-                    stream.Write(buffer, 0, buffer.Length);
-                    stream.Flush();
-                    */
-                //SlideObject slideObject = new SlideObject(pagenum, slide);
+                //save slide복사해서 새로운피피티 생성
+                presentation[pptNum].Save();
+                PowerPoint.Application tempPpt = new PowerPoint.Application();
+                PowerPoint.Presentation tempPresentation = tempPpt.Presentations.Add(MsoTriState.msoFalse);
+                PowerPoint.Slides tempSlides = tempPresentation.Slides;
+                tempSlides.InsertFromFile(ButtonPPT[pptNum].Tag.ToString(), 0, savePageNum, savePageNum);
+                tempPresentation.SaveAs(_namePath + @"\" + "mm");
 
-                //FileSerializer.Serialize(_Path + @"\"+"slide1.dat", slideObject);
+                //savePacket
+                Console.WriteLine("client : save");
+                byte[] buffer = new byte[1024 * 4];
+                savePacket = new SavePacket();
+                savePacket.type = (int)PacketType.SAVE;
+                savePacket.pptNum = pptNum;
+                savePacket.pageNum = savePageNum;
+                savePacket.isSave = true;
+                if (presentation[pptNum].Slides.Count == slideCnt[pptNum])  //추가된슬라이드인가
+                    savePacket.isAdd = false;
+                else
+                    savePacket.isAdd = true;
+
+
+                Packet.Serialize(savePacket).CopyTo(buffer, 0);
+                stream.Write(buffer, 0, buffer.Length);
+
+                //새로운피피티 server로보냄
+                FileInfo file = new FileInfo(_namePath +@"\"+ "mm.pptx");
+                FileStream fs = file.OpenRead();
+                byte[] bytes =  new byte[fs.Length];
+                fs.Read(bytes, 0, bytes.Length);
+                stream.Write(bytes, 0, bytes.Length);
+
+                File.Delete(_namePath + @"\" + "mm");
+                tempPresentation.Close();
+                fs.Close();
+                stream.Flush();
+
+                
 
             }
             catch (Exception e)

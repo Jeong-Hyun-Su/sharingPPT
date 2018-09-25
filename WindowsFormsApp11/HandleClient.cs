@@ -35,7 +35,17 @@ namespace WindowsFormsApp11
 
         public int lockPageNum { get; set; }
 
+        public int savePptNum { get; set; }
+
+        public int savePageNum { get; set; }
+
         public bool askLock { get; set; }
+
+        public bool askSave { get; set; }
+
+        public bool isAddSlide { get; set; }
+
+        public string saveFileName { get; set; } //클라이언트로부터받은 저장할슬라이드가있는ppt파일이름 ->서버에게보낼것
 
         public int beforeUploadNum { get; set; }
 
@@ -43,6 +53,7 @@ namespace WindowsFormsApp11
 
         public LockPacket lockPacket;
         public ListPacket listPacket;
+        public SavePacket savePacket;
 
         public Thread thread;
 
@@ -70,7 +81,7 @@ namespace WindowsFormsApp11
             networkStream.Write(sendBytes, 0, sendBytes.Length);
         }
 
-        public void ChangeList(string name, string pptname, int pagenum)
+        public void ChangeList(string name, string pptname, string pagenum)
         {
             Byte[] sendBytes = Encoding.UTF8.GetBytes("CHANGE@/" + name + "/" + pptname + "/" + pagenum);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
@@ -174,6 +185,34 @@ namespace WindowsFormsApp11
 
                                 break;
                             }
+                        case (int)PacketType.SAVE:
+                            {
+                                Console.WriteLine("handle client : save ");
+                                savePacket = (SavePacket)Packet.Desserialize(buffer);
+                                isAddSlide = savePacket.isAdd;
+                                lockPptNum = savePacket.pptNum;
+                                lockPageNum = savePacket.pageNum;
+
+
+                                //저장할슬라이드가있는 피피티파일을 읽어와 'ff.pptx'생성후 저장
+                                string _Path = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                                byte[] myReadBuffer = new byte[1024];
+                                int numberOfBytesRead = 0;
+                                saveFileName = _Path + @"\" + "ff.pptx";
+                                FileStream fs = new FileStream(saveFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+
+                                do
+                                {
+                                    numberOfBytesRead = networkStream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                                    fs.Write(myReadBuffer, 0, numberOfBytesRead);
+                                }
+                                while (networkStream.DataAvailable);
+
+                                fs.Close();
+                                askSave = true;
+
+                                break;
+                            }
                     }
 
 
@@ -191,10 +230,16 @@ namespace WindowsFormsApp11
             }
         }
 
+        //다른클라이언트가 lock하고있는경우 lockfail이라고클라이언트에게알림
         public void LockFail()
         {
             Byte[] sendBytes = Encoding.UTF8.GetBytes("FAIL@" + "fail");
             networkStream.Write(sendBytes, 0, sendBytes.Length);
+        }
+        
+        public void SendSaveFile(string sendFileName)
+        {
+            /////요기서클라이언트에게보내면됨
         }
     }
 }

@@ -17,6 +17,7 @@ namespace ClassLibrary
         UPLOAD = 0,
         LOCK,
         SAVE,
+        SLIDE,
         LISTVIEW
     }
 
@@ -59,10 +60,12 @@ namespace ClassLibrary
 
 
     [Serializable]
-    public class SlidePacket : Packet
+    public class SavePacket : Packet
     {
-        public PowerPoint.Slide slideObject { get; set; }
-        
+        public bool isSave { get; set; }
+        public int pageNum { get; set; }
+        public int pptNum { get; set; }
+        public bool isAdd { get; set; } //슬라이드가추가되엇는가
     }
     
     [Serializable]
