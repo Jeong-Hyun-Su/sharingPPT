@@ -331,21 +331,21 @@ namespace WindowsFormsApp11
                     if(clientList[i].askSave == true)
                     {
                         
-                        Console.WriteLine("client -> server  : askSave");
                         int savePptNum = clientList[i].savePptNum;
-                        
-                        
+
+                        Console.WriteLine("client -> server  : askSave: " + savePptNum);
+
                         //int curSlideIdx = ppt[savePptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
                         PowerPoint.Slides tempSlides = presentation[savePptNum].Slides;
 
                         if (clientList[i].isAddSlide)
                         {
-                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].lockPageNum-1, 1, 1);
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].savePageNum-1, 1, 1);
                         }
                         else
                         {
-                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].lockPageNum, 1, 1);
-                            tempSlides[clientList[i].lockPageNum].Delete();
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].savePageNum, 1, 1);
+                            tempSlides[clientList[i].savePageNum].Delete();
                         }
 
                         //tempSlides[curSlideIdx].Select();

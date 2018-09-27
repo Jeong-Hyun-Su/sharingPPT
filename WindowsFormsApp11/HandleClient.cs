@@ -190,8 +190,8 @@ namespace WindowsFormsApp11
                                 Console.WriteLine("handle client : save ");
                                 savePacket = (SavePacket)Packet.Desserialize(buffer);
                                 isAddSlide = savePacket.isAdd;
-                                lockPptNum = savePacket.pptNum;
-                                lockPageNum = savePacket.pageNum;
+                                savePptNum = savePacket.pptNum;
+                                savePageNum = savePacket.pageNum;
 
 
                                 //저장할슬라이드가있는 피피티파일을 읽어와 'ff.pptx'생성후 저장
