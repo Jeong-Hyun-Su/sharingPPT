@@ -42,11 +42,15 @@ namespace WindowsFormsApp11
 
         ///server lock관련 변수
         bool askLock;
-        bool askSave;
         int lockPptNum;
         int lockPageNum;
         string name;
 
+        ///server unlock관련 변수
+        bool isAddSlide;
+        bool askSave;
+        int savePptNum;
+        int savepageNum;
 
         public Server()
         {
@@ -258,6 +262,13 @@ namespace WindowsFormsApp11
 
         }
 
+
+        private void button_unlock_Click(object sender, EventArgs e)
+        {
+
+        }
+
+
         ////각 ppt의 locking 제어///
         private void checkLock()
         {
@@ -331,22 +342,22 @@ namespace WindowsFormsApp11
                     if(clientList[i].askSave == true)
                     {
                         
-                        int savePptNum = clientList[i].savePptNum;
-                        int savePageNum = clientList[i].savePageNum;
+                        int pptnum = clientList[i].savePptNum;
+                        int pagenum = clientList[i].savePageNum;
 
                         Console.WriteLine("client -> server  : askSave");
 
                         //int curSlideIdx = ppt[savePptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
-                        PowerPoint.Slides tempSlides = presentation[savePptNum].Slides;
+                        PowerPoint.Slides tempSlides = presentation[pptnum].Slides;
 
                         if (clientList[i].isAddSlide)
                         {
-                            tempSlides.InsertFromFile(clientList[i].saveFileName, savePageNum-1, 1, 1);
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, pagenum - 1, 1, 1);
                         }
                         else
                         {
-                            tempSlides.InsertFromFile(clientList[i].saveFileName, savePageNum, 1, 1);
-                            tempSlides[savePageNum].Delete();
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, pagenum, 1, 1);
+                            tempSlides[pagenum].Delete();
                         }
 
                         //tempSlides[curSlideIdx].Select();
@@ -361,7 +372,7 @@ namespace WindowsFormsApp11
                             if (i == j)
                                 ;
                             else
-                                clientList[j].SendSaveFile(clientList[i].saveFileName, savePptNum, savePageNum, clientList[i].isAddSlide);
+                                clientList[j].SendSaveFile(clientList[i].saveFileName, pptnum, pagenum, clientList[i].isAddSlide);
                         }
 
                         File.Delete(clientList[i].saveFileName);

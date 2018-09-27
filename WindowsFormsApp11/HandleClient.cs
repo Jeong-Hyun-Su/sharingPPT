@@ -48,8 +48,7 @@ namespace WindowsFormsApp11
         public string saveFileName { get; set; } //클라이언트로부터받은 저장할슬라이드가있는ppt파일이름 ->서버에게보낼것
 
         public int beforeUploadNum { get; set; }
-
-        public bool isEdit { get; set; }
+        
 
         public NetworkStream networkStream { get; set; }
 
