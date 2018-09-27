@@ -49,6 +49,8 @@ namespace WindowsFormsApp11
 
         public int beforeUploadNum { get; set; }
 
+        public bool isEdit { get; set; }
+
         public NetworkStream networkStream { get; set; }
 
         public LockPacket lockPacket;
@@ -237,9 +239,22 @@ namespace WindowsFormsApp11
             networkStream.Write(sendBytes, 0, sendBytes.Length);
         }
         
-        public void SendSaveFile(string sendFileName)
+        public void SendSaveFile(string sendFileName,int pptNum, int pageNum, bool isAdd)
         {
-            /////요기서클라이언트에게보내면됨
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("EDIT@/" + pptNum + "/" + pageNum+"/"+ isAdd);
+            networkStream.Write(sendBytes, 0, sendBytes.Length);
+
+            Thread.Sleep(300);
+
+            FileInfo file = new FileInfo(sendFileName);
+            FileStream fs = file.OpenRead();
+            byte[] bytes = new byte[fs.Length];
+            fs.Read(bytes, 0, bytes.Length);
+            networkStream.Write(bytes, 0, bytes.Length);
+            
+            fs.Close();
+
+            
         }
     }
 }

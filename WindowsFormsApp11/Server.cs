@@ -332,20 +332,21 @@ namespace WindowsFormsApp11
                     {
                         
                         int savePptNum = clientList[i].savePptNum;
+                        int savePageNum = clientList[i].savePageNum;
 
-                        Console.WriteLine("client -> server  : askSave: " + savePptNum);
+                        Console.WriteLine("client -> server  : askSave");
 
                         //int curSlideIdx = ppt[savePptNum].ActiveWindow.Selection.SlideRange.SlideNumber;
                         PowerPoint.Slides tempSlides = presentation[savePptNum].Slides;
 
                         if (clientList[i].isAddSlide)
                         {
-                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].savePageNum-1, 1, 1);
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, savePageNum-1, 1, 1);
                         }
                         else
                         {
-                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].savePageNum, 1, 1);
-                            tempSlides[clientList[i].savePageNum].Delete();
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, savePageNum, 1, 1);
+                            tempSlides[savePageNum].Delete();
                         }
 
                         //tempSlides[curSlideIdx].Select();
@@ -360,9 +361,10 @@ namespace WindowsFormsApp11
                             if (i == j)
                                 ;
                             else
-                                clientList[j].SendSaveFile(clientList[i].saveFileName);
+                                clientList[j].SendSaveFile(clientList[i].saveFileName, savePptNum, savePageNum, clientList[i].isAddSlide);
                         }
-                        //File.Delete(clientList[i].saveFileName);
+
+                        File.Delete(clientList[i].saveFileName);
                         clientList[i].askSave = false;
 
                     }
