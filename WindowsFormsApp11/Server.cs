@@ -340,12 +340,12 @@ namespace WindowsFormsApp11
 
                         if (clientList[i].isAddSlide)
                         {
-                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].lockPageNum-1, 1, 1);
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].savePageNum-1, 1, 1);
                         }
                         else
                         {
-                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].lockPageNum, 1, 1);
-                            tempSlides[clientList[i].lockPageNum].Delete();
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, clientList[i].savePageNum, 1, 1);
+                            tempSlides[clientList[i].savePageNum].Delete();
                         }
 
                         //tempSlides[curSlideIdx].Select();
