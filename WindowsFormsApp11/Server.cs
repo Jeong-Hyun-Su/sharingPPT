@@ -51,6 +51,7 @@ namespace WindowsFormsApp11
         bool askSave;
         int savePptNum;
         int savepageNum;
+        string saveFileName;
 
         public Server()
         {
@@ -258,14 +259,33 @@ namespace WindowsFormsApp11
             this.lockPptNum = 0;
             this.lockPageNum = ppt[0].ActiveWindow.Selection.SlideRange.SlideNumber;
             this.askLock = true;
-            Console.WriteLine(this.lockPageNum);
-
         }
 
 
         private void button_unlock_Click(object sender, EventArgs e)
         {
+            this.savePptNum = 0;
+            this.savepageNum = ppt[0].ActiveWindow.Selection.SlideRange.SlideNumber;
+            
+            //save와lock다른경우
+            if ((this.savepageNum != this.lockPageNum) || (this.savePptNum != this.lockPptNum))
+            {
+                MessageBox.Show(lockPageNum + "의 slide를 수정완료먼저해주세요");
+            }
+            else
+            {
+                string _Path = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+                presentation[this.savePptNum].Save();
+                PowerPoint.Application tempPpt = new PowerPoint.Application();
+                PowerPoint.Presentation tempPresentation = tempPpt.Presentations.Add(MsoTriState.msoFalse);
+                PowerPoint.Slides tempSlides = tempPresentation.Slides;
+                tempSlides.InsertFromFile(ButtonPPT[this.savePptNum].Tag.ToString(), 0, this.savepageNum, this.savepageNum);
+                tempPresentation.SaveAs(_Path + @"\" + "slide");
 
+                saveFileName = _Path + @"\" + "slide.pptx";
+
+                this.askSave = true;
+            }
         }
 
 
@@ -376,9 +396,48 @@ namespace WindowsFormsApp11
                         }
 
                         File.Delete(clientList[i].saveFileName);
+
+                        clientList[i].lockPageNum = -1;
+                        clientList[i].lockPptNum = -1;
+                        pptLockInfo[pptnum][pagenum] = -1; //save후 lock info배열에서 lock해제
                         clientList[i].askSave = false;
 
                     }
+                    if(this.askSave) //서버가 save요청했을 경우
+                    {
+                        int pptnum = this.savePptNum;
+                        int pagenum = this.savepageNum;
+
+                        PowerPoint.Slides tempSlides = presentation[pptnum].Slides;
+
+                        if (this.isAddSlide)
+                        {
+                            tempSlides.InsertFromFile(this.saveFileName, pagenum - 1, 1, 1);
+                        }
+                        else
+                        {
+                            tempSlides.InsertFromFile(this.saveFileName, pagenum, 1, 1);
+                            tempSlides[pagenum].Delete();
+                        }
+                        
+                        ChangeList(this.name, "", -1);
+
+                        //다른클라이언트들에게 변경된파일을보냄
+                        for (int j = 0; j < nClient; j++)
+                        {
+                            clientList[j].ChangeList(this.name, "", "");
+                            clientList[j].SendSaveFile(this.saveFileName, pptnum, pagenum, this.isAddSlide);
+                        }
+                        
+                        this.lockPageNum = -1;
+                        this.lockPptNum = -1;
+                        pptLockInfo[pptnum][pagenum] = -1; //save후 lock info배열에서 lock해제
+                        this.askSave = false;
+
+                        File.Delete(this.saveFileName);
+                    }
+
+                
                 }
 
             }
