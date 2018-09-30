@@ -191,6 +191,51 @@ namespace WindowsFormsApp11
                     {
                         MessageBox.Show("다른사용자가 편집중인 슬라이드입니다");
                     }
+                    ///다른 사용자가 피피티를 편집했을 경우
+                    else if(str.Substring(0,5)== "EDIT@")
+                    {
+                        string[] info = str.Split('/');
+                        int pptnum = Convert.ToInt32(info[1]);
+                        int pagenum = Convert.ToInt32(info[2]);
+                        bool isadd;
+                        if (info[3].CompareTo("True") == 0)
+                            isadd = true;
+                        else
+                            isadd = false;
+                  
+
+                        //변경할슬라이드가있는 피피티파일을 읽어와 'edit.pptx'생성후 저장
+                        byte[] myReadBuffer = new byte[1024];
+                        int numberOfBytesRead = 0;
+                        string path = _namePath + @"\" + "edit.pptx";
+                        FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+                        do
+                        {
+                            numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                            fs.Write(myReadBuffer, 0, numberOfBytesRead);
+                        }
+                        while (stream.DataAvailable);
+
+                        fs.Close();
+
+                        PowerPoint.Slides tempSlides = presentation[pptnum].Slides;
+                        if (isadd)
+                        {
+                            tempSlides.InsertFromFile(path, pagenum-1, 1, 1);
+                        }
+                        else
+                        {
+                            tempSlides.InsertFromFile(path, pagenum, 1, 1);
+                            tempSlides[pagenum].Delete();
+                        }
+                        
+                        tempSlides.InsertFromFile(path, pagenum, 1, 1);
+
+
+                        File.Delete(path);
+
+
+                    }
                     else if (filename != "")
                     {
                         ///upload시작한다고 server에게 전달 ///packetType = upload
