@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2043
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WindowsFormsApp11", "WindowsFormsApp11\WindowsFormsApp11.csproj", "{DC3EA2EF-E443-4F99-A663-FEB7A54045D0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharingPPT", "WindowsFormsApp11\SharingPPT.csproj", "{DC3EA2EF-E443-4F99-A663-FEB7A54045D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClassLibrary", "ClassLibrary\ClassLibrary.csproj", "{98372C11-26FE-49F4-91E8-1D0A4ADA8EC5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClassLibrary", "ClassLibrary\ClassLibrary.csproj", "{98372C11-26FE-49F4-91E8-1D0A4ADA8EC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
