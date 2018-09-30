@@ -195,11 +195,11 @@ namespace WindowsFormsApp11
                                 savePageNum = savePacket.pageNum;
 
 
-                                //저장할슬라이드가있는 피피티파일을 읽어와 'ff.pptx'생성후 저장
+                                //저장할슬라이드가있는 피피티파일을 읽어와 'slide_handle.pptx'생성후 저장
                                 string _Path = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                                 byte[] myReadBuffer = new byte[1024];
                                 int numberOfBytesRead = 0;
-                                saveFileName = _Path + @"\" + "ff.pptx";
+                                saveFileName = _Path + @"\" + "slide_handle.pptx";
                                 FileStream fs = new FileStream(saveFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
 
                                 do
@@ -252,7 +252,7 @@ namespace WindowsFormsApp11
             networkStream.Write(bytes, 0, bytes.Length);
             
             fs.Close();
-
+            
             
         }
     }

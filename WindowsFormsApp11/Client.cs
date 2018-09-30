@@ -228,12 +228,8 @@ namespace WindowsFormsApp11
                             tempSlides.InsertFromFile(path, pagenum, 1, 1);
                             tempSlides[pagenum].Delete();
                         }
-                        
-                        tempSlides.InsertFromFile(path, pagenum, 1, 1);
-
 
                         File.Delete(path);
-
 
                     }
                     else if (filename != "")
@@ -355,7 +351,7 @@ namespace WindowsFormsApp11
                 PowerPoint.Presentation tempPresentation = tempPpt.Presentations.Add(MsoTriState.msoFalse);
                 PowerPoint.Slides tempSlides = tempPresentation.Slides;
                 tempSlides.InsertFromFile(ButtonPPT[pptNum].Tag.ToString(), 0, savePageNum, savePageNum);
-                tempPresentation.SaveAs(_namePath + @"\" + "mm");
+                tempPresentation.SaveAs(_namePath + @"\" + "slide");
 
                 //savePacket
                 Console.WriteLine("client : save");
@@ -375,18 +371,19 @@ namespace WindowsFormsApp11
                 stream.Write(buffer, 0, buffer.Length);
 
                 //새로운피피티 server로보냄
-                FileInfo file = new FileInfo(_namePath +@"\"+ "mm.pptx");
+                FileInfo file = new FileInfo(_namePath +@"\"+ "slide.pptx");
                 FileStream fs = file.OpenRead();
                 byte[] bytes =  new byte[fs.Length];
                 fs.Read(bytes, 0, bytes.Length);
                 stream.Write(bytes, 0, bytes.Length);
-
-                File.Delete(_namePath + @"\" + "mm");
+                
                 tempPresentation.Close();
                 fs.Close();
                 stream.Flush();
 
-                
+                File.Delete(_namePath + @"\" + "slide.pptx");
+
+
 
             }
             catch (Exception e)
