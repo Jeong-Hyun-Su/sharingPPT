@@ -202,7 +202,12 @@ namespace WindowsFormsApp11
                                 string _Path = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
                                 byte[] myReadBuffer = new byte[1024];
                                 int numberOfBytesRead = 0;
+
                                 saveFileName = _Path + @"\" + "slide_handle.pptx";
+                                FileInfo fileInfo = new FileInfo(saveFileName);
+                                if (fileInfo.Exists == true)
+                                    File.Delete(this.saveFileName);
+
                                 FileStream fs = new FileStream(saveFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
 
                                 do

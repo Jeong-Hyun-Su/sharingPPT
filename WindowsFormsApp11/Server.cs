@@ -220,8 +220,8 @@ namespace WindowsFormsApp11
                
                 pptLockInfo.Add(new List<int>());
                
-                //리스트 초기화 -> 피피티 슬라이드 수만큼 초기화하도록 바꿔야함
-                for (int i=0;i<30;i++)
+                //리스트 초기화 
+                for (int i=0;i<300;i++)
                 {
                     pptLockInfo[IdxPPT].Add(-1);
                 }
@@ -412,7 +412,7 @@ namespace WindowsFormsApp11
                             }
                         }
 
-                        File.Delete(clientList[i].saveFileName);
+                        
 
                         clientList[i].lockPageNum = -1;
                         clientList[i].lockPptNum = -1;
