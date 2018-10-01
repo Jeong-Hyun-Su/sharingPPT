@@ -27,6 +27,7 @@ Lock을 걸어 다른 사용자들이 접근하지 못하도록 잠그는 기능
 ![image](https://user-images.githubusercontent.com/42924998/46285157-6a6bc400-c5b5-11e8-84ef-c9eb9982f362.png)
 
 > Server - PPT 파일을 업로드 할 사용자
+
 > Client  - Server 사용자가 업로드 한 파일을 같이 수정, 작성할 사용자 
 
 ![image](https://user-images.githubusercontent.com/42924998/46285167-78214980-c5b5-11e8-8cae-470b5536b128.png)
