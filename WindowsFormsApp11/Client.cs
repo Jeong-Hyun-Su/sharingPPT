@@ -248,6 +248,7 @@ namespace WindowsFormsApp11
                     }
                     else if (str.Substring(0, 7) == "UPLOAD@")
                     {
+
                         if (filename != "")
                         {
                             ///upload시작한다고 server에게 전달 ///packetType = upload
