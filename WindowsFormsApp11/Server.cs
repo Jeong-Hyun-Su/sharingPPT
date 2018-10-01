@@ -284,9 +284,13 @@ namespace WindowsFormsApp11
                 PowerPoint.Presentation tempPresentation = tempPpt.Presentations.Add(MsoTriState.msoFalse);
                 PowerPoint.Slides tempSlides = tempPresentation.Slides;
                 tempSlides.InsertFromFile(ButtonPPT[this.savePptNum].Tag.ToString(), 0, this.savepageNum, this.savepageNum);
-                tempPresentation.SaveAs(_Path + @"\" + "slide");
 
                 saveFileName = _Path + @"\" + "slide.pptx";
+                FileInfo fileInfo = new FileInfo(saveFileName);
+                if(fileInfo.Exists == true)
+                    File.Delete(this.saveFileName);
+                tempPresentation.SaveAs(_Path + @"\" + "slide");
+
 
                 this.askSave = true;
             }
@@ -418,6 +422,7 @@ namespace WindowsFormsApp11
                     }
                     if(this.askSave) //서버가 save요청했을 경우
                     {
+                        
                         int pptnum = this.savePptNum;
                         int pagenum = this.savepageNum;
 
@@ -468,7 +473,7 @@ namespace WindowsFormsApp11
                             }
                         }
                         
-                        File.Delete(this.saveFileName);
+                        
                     }
 
                 

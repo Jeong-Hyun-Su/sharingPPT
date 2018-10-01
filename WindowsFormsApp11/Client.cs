@@ -223,16 +223,17 @@ namespace WindowsFormsApp11
                         byte[] myReadBuffer = new byte[1024];
                         int numberOfBytesRead = 0;
                         string path = _namePath + @"\" + "edit.pptx";
-                        FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+                        FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
                         
                         do
                         {
+                            Console.WriteLine("GGGGGGGGGGGG");
                             numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
                             fs.Write(myReadBuffer, 0, numberOfBytesRead);
                         }
                         while (fs.Length < fileSize);
 
-                        fs.Close();
+                        
 
                         PowerPoint.Slides tempSlides = presentation[pptnum].Slides;
                         if (isadd)
@@ -246,6 +247,7 @@ namespace WindowsFormsApp11
                         }
 
                         File.Delete(path);
+                        fs.Close();
 
                     }
                     else if (str.Substring(0, 7) == "UPLOAD@")
