@@ -241,12 +241,13 @@ namespace WindowsFormsApp11
         
         public void SendSaveFile(string sendFileName,int pptNum, int pageNum, bool isAdd)
         {
-            Byte[] sendBytes = Encoding.UTF8.GetBytes("EDIT@/" + pptNum + "/" + pageNum+"/"+ isAdd);
+            FileInfo file = new FileInfo(sendFileName);
+
+            Byte[] sendBytes = Encoding.UTF8.GetBytes("EDIT@/"+file.Length.ToString()+"/" + pptNum + "/" + pageNum+"/"+ isAdd);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
 
             Thread.Sleep(300);
-
-            FileInfo file = new FileInfo(sendFileName);
+            
             FileStream fs = file.OpenRead();
             byte[] bytes = new byte[fs.Length];
             fs.Read(bytes, 0, bytes.Length);

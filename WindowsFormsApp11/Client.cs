@@ -209,10 +209,11 @@ namespace WindowsFormsApp11
                     else if (str.Substring(0, 5) == "EDIT@")
                     {
                         string[] info = str.Split('/');
-                        int pptnum = Convert.ToInt32(info[1]);
-                        int pagenum = Convert.ToInt32(info[2]);
+                        int fileSize = Convert.ToInt32(info[1]);
+                        int pptnum = Convert.ToInt32(info[2]);
+                        int pagenum = Convert.ToInt32(info[3]);
                         bool isadd;
-                        if (info[3].CompareTo("True") == 0)
+                        if (info[4].CompareTo("True") == 0)
                             isadd = true;
                         else
                             isadd = false;
@@ -223,12 +224,13 @@ namespace WindowsFormsApp11
                         int numberOfBytesRead = 0;
                         string path = _namePath + @"\" + "edit.pptx";
                         FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+                        
                         do
                         {
                             numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
                             fs.Write(myReadBuffer, 0, numberOfBytesRead);
                         }
-                        while (stream.DataAvailable);
+                        while (fs.Length < fileSize);
 
                         fs.Close();
 
@@ -373,7 +375,7 @@ namespace WindowsFormsApp11
                 PowerPoint.Slides tempSlides = tempPresentation.Slides;
                 tempSlides.InsertFromFile(ButtonPPT[pptNum].Tag.ToString(), 0, savePageNum, savePageNum);
                 tempPresentation.SaveAs(_namePath + @"\" + "slide");
-                FileInfo file = new FileInfo(_namePath + @"\" + "slide");
+                FileInfo file = new FileInfo(_namePath + @"\" + "slide.pptx");
 
                 //savePacket
                 Console.WriteLine("client : save");
