@@ -61,7 +61,7 @@
             this.Controls.Add(this.button_S);
             this.Name = "Home";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Form1";
+            this.Text = "SharingPPT";
             this.ResumeLayout(false);
 
         }
