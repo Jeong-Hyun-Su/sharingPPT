@@ -78,19 +78,33 @@ namespace WindowsFormsApp11
 
         private void button_Enter_Click(object sender, EventArgs e)
         {
+            if (string.Equals(textBox1_IP.Text, string.Empty))
+                return;
+            if (string.Equals(textBox_Port.Text, string.Empty))
+                return;
+            if (string.Equals(textBox_name.Text, string.Empty))
+                return;
+            
+            try
+            {
+                string IP = textBox1_IP.Text;
+                int port = Convert.ToInt32(textBox_Port.Text);
+                client = new TcpClient();
+                client.Connect(IP, port);
+                stream = client.GetStream();
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show("IP 와 PORT 를 확인해주세요.");
+                return;
+            }
+
+
             panel1.Visible = true;
             panel1.Enabled = true;
             panel2.Parent = panel1;
             panel2.Visible = true;
             panel2.Enabled = true;
-
-
-            string IP = textBox1_IP.Text;
-            int port = Convert.ToInt32(textBox_Port.Text);
-            client = new TcpClient();
-            client.Connect(IP, port);
-            stream = client.GetStream();
-
 
             ///자신이름리스트에등록
             ListViewItem li1 = new ListViewItem();
@@ -365,7 +379,7 @@ namespace WindowsFormsApp11
                     savePacket.isAdd = false;
                 else
                     savePacket.isAdd = true;
-
+                slideCnt[pptNum] = presentation[pptNum].Slides.Count;
 
                 Packet.Serialize(savePacket).CopyTo(buffer, 0);
                 stream.Write(buffer, 0, buffer.Length);

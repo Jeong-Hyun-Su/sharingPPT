@@ -61,7 +61,6 @@ namespace WindowsFormsApp11
         private void Server_Load(object sender, EventArgs e)
         {
             label_IP.Text = Dns.GetHostByName(Dns.GetHostName()).AddressList[0].ToString();
-            
             clientList = new List<HandleClient>();
 
             ButtonPPT[0] = button_ppt0;
@@ -75,6 +74,10 @@ namespace WindowsFormsApp11
 
         private void button_Make_Click(object sender, EventArgs e)
         {
+            if (string.Equals(textBox_Port.Text, string.Empty))
+                return;
+            if (string.Equals(textBox_name.Text, string.Empty))
+                return;
             panel1.Visible = true;
             panel1.Enabled = true;
            
@@ -150,7 +153,8 @@ namespace WindowsFormsApp11
 
                             for(int i=0; i<nClient; i++)
                             {
-                                clientList[i].AddList(clientList[nClient].name);
+                                if (clientList[i].isConnect)
+                                    clientList[i].AddList(clientList[nClient].name);
                             }
                             break;
                         }
@@ -318,7 +322,8 @@ namespace WindowsFormsApp11
                             this.ChangeList(name, pptN, pageNum);
                             for (int j = 0; j < nClient; j++)
                             {
-                                clientList[j].ChangeList(name, pptN, pageNum.ToString());
+                                if(clientList[j].isConnect)
+                                    clientList[j].ChangeList(name, pptN, pageNum.ToString());
                             }
                         }
                         else //해당 ppt의 page가  lock일 경우 초기화
@@ -346,7 +351,8 @@ namespace WindowsFormsApp11
                             this.ChangeList(name, pptN, pageNum);
                             for (int j = 0; j < nClient; j++)
                             {
-                                clientList[j].ChangeList(name, pptN, pageNum.ToString()); 
+                                if (clientList[j].isConnect)
+                                    clientList[j].ChangeList(name, pptN, pageNum.ToString()); 
                             }
                         }
                         else //해당 ppt의 page가  lock일 경우 초기화
@@ -372,7 +378,8 @@ namespace WindowsFormsApp11
 
                         if (clientList[i].isAddSlide)
                         {
-                            tempSlides.InsertFromFile(clientList[i].saveFileName, pagenum - 1, 1, 1);
+
+                            tempSlides.InsertFromFile(clientList[i].saveFileName, pagenum-1 , 1, 1);
                         }
                         else
                         {
@@ -384,15 +391,21 @@ namespace WindowsFormsApp11
                         //Console.WriteLine("FFFFFFFFF" + curSlideIdx);
 
                         ChangeList(clientList[i].name, "", -1);
+                        clientList[i].ChangeList(clientList[i].name, "", "");
 
                         //다른클라이언트들에게변경된파일을보냄
                         for (int j=0; j<nClient; j++)
                         {
-                            clientList[j].ChangeList(clientList[i].name, "","");
                             if (i == j)
                                 ;
                             else
-                                clientList[j].SendSaveFile(clientList[i].saveFileName, pptnum, pagenum, clientList[i].isAddSlide);
+                            {
+                                if (clientList[j].isConnect)
+                                {
+                                    clientList[j].SendSaveFile(clientList[i].saveFileName, pptnum, pagenum, clientList[i].isAddSlide);
+                                    clientList[j].ChangeList(clientList[i].name, "", "");
+                                }
+                            }
                         }
 
                         File.Delete(clientList[i].saveFileName);
@@ -412,7 +425,10 @@ namespace WindowsFormsApp11
 
                         if (this.isAddSlide)
                         {
-                            tempSlides.InsertFromFile(this.saveFileName, pagenum - 1, 1, 1);
+                            if (pagenum == 1)
+                                tempSlides.InsertFromFile(clientList[i].saveFileName, pagenum, 1, 1);
+                            else
+                                tempSlides.InsertFromFile(clientList[i].saveFileName, pagenum - 1, 1, 1);
                         }
                         else
                         {
@@ -425,8 +441,11 @@ namespace WindowsFormsApp11
                         //다른클라이언트들에게 변경된파일을보냄
                         for (int j = 0; j < nClient; j++)
                         {
-                            clientList[j].ChangeList(this.name, "", "");
-                            clientList[j].SendSaveFile(this.saveFileName, pptnum, pagenum, this.isAddSlide);
+                            if (clientList[j].isConnect)
+                            {
+                                clientList[j].ChangeList(this.name, "", "");
+                                clientList[j].SendSaveFile(this.saveFileName, pptnum, pagenum, this.isAddSlide);
+                            }
                         }
                         
                         this.lockPageNum = -1;
