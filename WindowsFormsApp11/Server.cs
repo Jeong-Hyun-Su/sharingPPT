@@ -391,9 +391,6 @@ namespace WindowsFormsApp11
                             tempSlides[pagenum].Delete();
                         }
 
-                        //tempSlides[curSlideIdx].Select();
-                        //Console.WriteLine("FFFFFFFFF" + curSlideIdx);
-
                         ChangeList(clientList[i].name, "", -1);
                         clientList[i].ChangeList(clientList[i].name, "", "");
 

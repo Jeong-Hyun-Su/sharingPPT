@@ -220,22 +220,16 @@ namespace WindowsFormsApp11
 
 
                         //변경할슬라이드가있는 피피티파일을 읽어와 'edit.pptx'생성후 저장
-                        byte[] myReadBuffer = new byte[1024];
+                        byte[] myReadBuffer = new byte[fileSize];
                         int numberOfBytesRead = 0;
                         string path = _namePath + @"\" + "edit.pptx";
-                        FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
-                        Console.WriteLine("@@@@@@@@@@@@@@@@@@22" + fileSize);
-                        do
-                        {
-                            numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
-                            fs.Write(myReadBuffer, 0, numberOfBytesRead);
-                            Console.WriteLine("GGGGGGGGGGGG"+fs.Length);
-                        }
-                        while (fs.Length < fileSize);
+                        FileStream fs = new FileStream(path, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
+                       
+                        numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                        fs.Write(myReadBuffer, 0, numberOfBytesRead);                   
+                       
+                        
                         fs.Close();
-
-
-                        Console.WriteLine(pptnum + pagenum + "GGGGGGG");
                         PowerPoint.Slides tempSlides = presentation[pptnum].Slides;
                         if (isadd)
                         {
@@ -283,7 +277,7 @@ namespace WindowsFormsApp11
                             System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(_namePath);
                             if (di.Exists == false)
                                 di.Create();
-                            FileStream fs = new FileStream(_namePath + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);
+                            FileStream fs = new FileStream(_namePath + @"\" + filename, FileMode.Create, FileAccess.ReadWrite, FileShare.None);
 
                             if (filename != string.Empty)
                             {
@@ -292,7 +286,6 @@ namespace WindowsFormsApp11
 
                                 do
                                 {
-                                    Console.WriteLine("FFFFF");
                                     numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
                                     fs.Write(myReadBuffer, 0, numberOfBytesRead);
                                 }
@@ -384,7 +377,7 @@ namespace WindowsFormsApp11
                 byte[] buffer = new byte[1024 * 4];
                 savePacket = new SavePacket();
                 savePacket.type = (int)PacketType.SAVE;
-                savePacket.pptNum = pptNum;
+                savePacket.pptNum = savePptNum;
                 savePacket.pageNum = savePageNum;
                 savePacket.isSave = true;
                 savePacket.fileSize =file.Length;
@@ -407,7 +400,6 @@ namespace WindowsFormsApp11
                 tempPresentation.Close();
                 fs.Close();
                 stream.Flush();
-
                 File.Delete(_namePath + @"\" + "slide.pptx");
 
 

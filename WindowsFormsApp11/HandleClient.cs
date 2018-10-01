@@ -196,11 +196,11 @@ namespace WindowsFormsApp11
                                 savePptNum = savePacket.pptNum;
                                 savePageNum = savePacket.pageNum;
                                 long fileSize = savePacket.fileSize;
-
+                                
 
                                 //저장할슬라이드가있는 피피티파일을 읽어와 'slide_handle.pptx'생성후 저장
                                 string _Path = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
-                                byte[] myReadBuffer = new byte[1024];
+                                byte[] myReadBuffer = new byte[fileSize];
                                 int numberOfBytesRead = 0;
 
                                 saveFileName = _Path + @"\" + "slide_handle.pptx";
@@ -208,16 +208,14 @@ namespace WindowsFormsApp11
                                 if (fileInfo.Exists == true)
                                     File.Delete(this.saveFileName);
 
-                                FileStream fs = new FileStream(saveFileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None);
+                                FileStream fs = new FileStream(saveFileName, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.None);
 
-                                do
-                                {
-                                    numberOfBytesRead = networkStream.Read(myReadBuffer, 0, myReadBuffer.Length);
-                                    fs.Write(myReadBuffer, 0, numberOfBytesRead);
-                                }
-                                while (fs.Length < fileSize);
-
+                                
+                                numberOfBytesRead = networkStream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                                fs.Write(myReadBuffer, 0, numberOfBytesRead);
+                                
                                 fs.Close();
+
                                 askSave = true;
 
                                 break;
@@ -258,8 +256,9 @@ namespace WindowsFormsApp11
             FileStream fs = file.OpenRead();
             byte[] bytes = new byte[fs.Length];
             fs.Read(bytes, 0, bytes.Length);
-            networkStream.Write(bytes, 0, bytes.Length);
             
+            networkStream.Write(bytes, 0, bytes.Length);
+
             fs.Close();
 
             isSaveEnd = true;
