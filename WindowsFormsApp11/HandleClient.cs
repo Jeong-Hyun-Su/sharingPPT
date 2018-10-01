@@ -102,7 +102,7 @@ namespace WindowsFormsApp11
                     string[] filenames = fName.Split('\\');
                     string filename = filenames[filenames.Length - 1];
 
-                    Byte[] sendBytes = Encoding.UTF8.GetBytes(filename);
+                    Byte[] sendBytes = Encoding.UTF8.GetBytes("UPLOAD@"+filename);
                     networkStream.Write(sendBytes, 0, sendBytes.Length);
                     Console.WriteLine("upload1 complete");
                 }

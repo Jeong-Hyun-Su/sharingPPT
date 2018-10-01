@@ -143,9 +143,9 @@ namespace WindowsFormsApp11
                     int BytesRead = stream.Read(ReadByte, 0, (int)ReadByte.Length);
                     string str = Encoding.UTF8.GetString(ReadByte);
                     filename = Encoding.GetEncoding("utf-8").GetString(ReadByte, 0, BytesRead);
-                    
+
                     ///server와 연결되있는client의 name들 리스트뷰에 등록
-                    if (str.Substring(0,5) == "NAME#")
+                    if (str.Substring(0, 5) == "NAME#")
                     {
                         Console.WriteLine("add servername " + str);
                         string[] names = str.Split('/');
@@ -169,7 +169,7 @@ namespace WindowsFormsApp11
                     else if (str.Substring(0, 5) == "NAME*")
                     {
                         ListViewItem li = new ListViewItem();
-                        li.Text = str.Substring(5, str.Length-5);
+                        li.Text = str.Substring(5, str.Length - 5);
                         li.SubItems.Add("");
                         li.SubItems.Add("");
                         Invoke((MethodInvoker)delegate
@@ -206,7 +206,7 @@ namespace WindowsFormsApp11
                         MessageBox.Show("다른사용자가 편집중인 슬라이드입니다");
                     }
                     ///다른 사용자가 피피티를 편집했을 경우
-                    else if(str.Substring(0,5)== "EDIT@")
+                    else if (str.Substring(0, 5) == "EDIT@")
                     {
                         string[] info = str.Split('/');
                         int pptnum = Convert.ToInt32(info[1]);
@@ -216,7 +216,7 @@ namespace WindowsFormsApp11
                             isadd = true;
                         else
                             isadd = false;
-                  
+
 
                         //변경할슬라이드가있는 피피티파일을 읽어와 'edit.pptx'생성후 저장
                         byte[] myReadBuffer = new byte[1024];
@@ -235,7 +235,7 @@ namespace WindowsFormsApp11
                         PowerPoint.Slides tempSlides = presentation[pptnum].Slides;
                         if (isadd)
                         {
-                            tempSlides.InsertFromFile(path, pagenum-1, 1, 1);
+                            tempSlides.InsertFromFile(path, pagenum - 1, 1, 1);
                         }
                         else
                         {
@@ -246,65 +246,70 @@ namespace WindowsFormsApp11
                         File.Delete(path);
 
                     }
-                    else if (filename != "")
+                    else if (str.Substring(0, 7) == "UPLOAD@")
                     {
-                        ///upload시작한다고 server에게 전달 ///packetType = upload
-                        byte[] buffer = new byte[1024 * 4];
-                        uploadPacket = new UploadPacket();
-                        uploadPacket.type = (int)PacketType.UPLOAD;
-                        uploadPacket.isup = true;
-                        Packet.Serialize(uploadPacket).CopyTo(buffer, 0);
-                        stream.Write(buffer, 0, buffer.Length);
-                        Console.WriteLine("uploadpacket");
-
-                        Byte[] sendBytes = Encoding.GetEncoding("utf-8").GetBytes(_Path + @"\" + filename);
-                        stream.Write(sendBytes, 0, sendBytes.Length);
-
-                        int ByteSize = 0;
-                        Byte[] FileSizeBytes = new byte[client.ReceiveBufferSize];
-                        ByteSize = stream.Read(FileSizeBytes, 0, FileSizeBytes.Length);
-                        //int MaxFileLength = Convert.ToInt32(Encoding.UTF8.GetString(FileSizeBytes, 0, ByteSize));
-
-                        ///전송준비작업을 완료했다고 서버에 전해줌
-                        byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
-                        ReadyTransBytes = Encoding.UTF8.GetBytes("READY");
-                        stream.Write(ReadyTransBytes, 0, ReadyTransBytes.Length);
-
-                        _namePath = _Path + @"\" + textBox_name.Text;
-                        System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(_namePath);
-                        if (di.Exists == false)
-                            di.Create();
-                        FileStream fs = new FileStream(_namePath + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);
-
-                        if (filename != string.Empty)
+                        if (filename != "")
                         {
-                            byte[] myReadBuffer = new byte[1024];
-                            int numberOfBytesRead = 0;
+                            ///upload시작한다고 server에게 전달 ///packetType = upload
+                            byte[] buffer = new byte[1024 * 4];
+                            uploadPacket = new UploadPacket();
+                            uploadPacket.type = (int)PacketType.UPLOAD;
+                            uploadPacket.isup = true;
+                            Packet.Serialize(uploadPacket).CopyTo(buffer, 0);
+                            stream.Write(buffer, 0, buffer.Length);
+                            Console.WriteLine("uploadpacket");
 
-                            do
+                            _namePath = _Path + @"\" + textBox_name.Text;
+                            filename = filename.Substring(7, filename.Length - 7);
+                            Byte[] sendBytes = Encoding.GetEncoding("utf-8").GetBytes(_namePath + @"\" + filename);
+                            stream.Write(sendBytes, 0, sendBytes.Length);
+
+                            int ByteSize = 0;
+                            Byte[] FileSizeBytes = new byte[client.ReceiveBufferSize];
+                            ByteSize = stream.Read(FileSizeBytes, 0, FileSizeBytes.Length);
+                            //int MaxFileLength = Convert.ToInt32(Encoding.UTF8.GetString(FileSizeBytes, 0, ByteSize));
+
+                            ///전송준비작업을 완료했다고 서버에 전해줌
+                            byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
+                            ReadyTransBytes = Encoding.UTF8.GetBytes("READY");
+                            stream.Write(ReadyTransBytes, 0, ReadyTransBytes.Length);
+
+
+                            System.IO.DirectoryInfo di = new System.IO.DirectoryInfo(_namePath);
+                            if (di.Exists == false)
+                                di.Create();
+                            FileStream fs = new FileStream(_namePath + @"\" + filename, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                            if (filename != string.Empty)
                             {
-                                numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
-                                fs.Write(myReadBuffer, 0, numberOfBytesRead);
+                                byte[] myReadBuffer = new byte[1024];
+                                int numberOfBytesRead = 0;
+
+                                do
+                                {
+                                    numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
+                                    fs.Write(myReadBuffer, 0, numberOfBytesRead);
+                                }
+                                //while (fs.Length < MaxFileLength);
+                                while (stream.DataAvailable);
                             }
-                            //while (fs.Length < MaxFileLength);
-                            while (stream.DataAvailable);
+                            fs.Flush();
+                            fs.Close();
+                            stream.Flush();
+
+                            Invoke((MethodInvoker)delegate
+                            {
+                                ButtonPPT[IdxPPT].Visible = true;
+                                ButtonPPT[IdxPPT].Enabled = true;
+                                ButtonPPT[IdxPPT].Tag = _namePath + @"\" + filename;
+                                LabelPPT[IdxPPT].Visible = true;
+                                LabelPPT[IdxPPT].Text = Path.GetFileNameWithoutExtension(filename);
+
+                                IdxPPT++;
+                            });
+
+
                         }
-                        fs.Flush();
-                        fs.Close();
-                        stream.Flush();
-
-                        Invoke((MethodInvoker)delegate
-                        {
-                            ButtonPPT[IdxPPT].Visible = true;
-                            ButtonPPT[IdxPPT].Enabled = true;
-                            ButtonPPT[IdxPPT].Tag = _namePath + @"\" + filename;
-                            LabelPPT[IdxPPT].Visible = true;
-                            LabelPPT[IdxPPT].Text = Path.GetFileNameWithoutExtension(filename);
-
-                            IdxPPT++;
-                        });
-
-
                     }
                 }
             }
