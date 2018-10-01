@@ -193,6 +193,7 @@ namespace WindowsFormsApp11
                                 isAddSlide = savePacket.isAdd;
                                 savePptNum = savePacket.pptNum;
                                 savePageNum = savePacket.pageNum;
+                                long fileSize = savePacket.fileSize;
 
 
                                 //저장할슬라이드가있는 피피티파일을 읽어와 'slide_handle.pptx'생성후 저장
@@ -207,7 +208,7 @@ namespace WindowsFormsApp11
                                     numberOfBytesRead = networkStream.Read(myReadBuffer, 0, myReadBuffer.Length);
                                     fs.Write(myReadBuffer, 0, numberOfBytesRead);
                                 }
-                                while (networkStream.DataAvailable);
+                                while (fs.Length < fileSize);
 
                                 fs.Close();
                                 askSave = true;

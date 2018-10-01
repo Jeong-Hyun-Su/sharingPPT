@@ -268,7 +268,7 @@ namespace WindowsFormsApp11
                             int ByteSize = 0;
                             Byte[] FileSizeBytes = new byte[client.ReceiveBufferSize];
                             ByteSize = stream.Read(FileSizeBytes, 0, FileSizeBytes.Length);
-                            //int MaxFileLength = Convert.ToInt32(Encoding.UTF8.GetString(FileSizeBytes, 0, ByteSize));
+                            int MaxFileLength = Convert.ToInt32(Encoding.UTF8.GetString(FileSizeBytes, 0, ByteSize));
 
                             ///전송준비작업을 완료했다고 서버에 전해줌
                             byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
@@ -288,11 +288,12 @@ namespace WindowsFormsApp11
 
                                 do
                                 {
+                                    Console.WriteLine("FFFFF");
                                     numberOfBytesRead = stream.Read(myReadBuffer, 0, myReadBuffer.Length);
                                     fs.Write(myReadBuffer, 0, numberOfBytesRead);
                                 }
-                                //while (fs.Length < MaxFileLength);
-                                while (stream.DataAvailable);
+                                while (fs.Length < MaxFileLength);
+                                //while (stream.DataAvailable);
                             }
                             fs.Flush();
                             fs.Close();
@@ -372,6 +373,7 @@ namespace WindowsFormsApp11
                 PowerPoint.Slides tempSlides = tempPresentation.Slides;
                 tempSlides.InsertFromFile(ButtonPPT[pptNum].Tag.ToString(), 0, savePageNum, savePageNum);
                 tempPresentation.SaveAs(_namePath + @"\" + "slide");
+                FileInfo file = new FileInfo(_namePath + @"\" + "slide");
 
                 //savePacket
                 Console.WriteLine("client : save");
@@ -381,6 +383,7 @@ namespace WindowsFormsApp11
                 savePacket.pptNum = pptNum;
                 savePacket.pageNum = savePageNum;
                 savePacket.isSave = true;
+                savePacket.fileSize =file.Length;
                 if (presentation[pptNum].Slides.Count == slideCnt[pptNum])  //추가된슬라이드인가
                     savePacket.isAdd = false;
                 else
@@ -390,8 +393,8 @@ namespace WindowsFormsApp11
                 Packet.Serialize(savePacket).CopyTo(buffer, 0);
                 stream.Write(buffer, 0, buffer.Length);
 
+               
                 //새로운피피티 server로보냄
-                FileInfo file = new FileInfo(_namePath +@"\"+ "slide.pptx");
                 FileStream fs = file.OpenRead();
                 byte[] bytes =  new byte[fs.Length];
                 fs.Read(bytes, 0, bytes.Length);

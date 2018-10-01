@@ -66,6 +66,7 @@ namespace ClassLibrary
         public int pageNum { get; set; }
         public int pptNum { get; set; }
         public bool isAdd { get; set; } //슬라이드가추가되엇는가
+        public long fileSize { get; set; }
     }
     
     [Serializable]
