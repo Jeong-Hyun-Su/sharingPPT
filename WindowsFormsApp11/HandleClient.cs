@@ -248,7 +248,7 @@ namespace WindowsFormsApp11
             Byte[] sendBytes = Encoding.UTF8.GetBytes("EDIT@/"+file.Length.ToString()+"/" + pptNum + "/" + pageNum+"/"+ isAdd);
             networkStream.Write(sendBytes, 0, sendBytes.Length);
 
-            Thread.Sleep(300);
+            Thread.Sleep(500);
             
             FileStream fs = file.OpenRead();
             byte[] bytes = new byte[fs.Length];

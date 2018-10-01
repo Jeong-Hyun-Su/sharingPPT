@@ -458,20 +458,6 @@ namespace WindowsFormsApp11
                         pptLockInfo[pptnum][pagenum] = -1; //save후 lock info배열에서 lock해제
                         this.askSave = false;
 
-                        int saveCnt = 0;
-
-                        //클라이언트에게 전송이완료됫는가
-                        for (int j = 0; j < nClient; j++)
-                        {
-                            if (clientList[j].isConnect)
-                            {
-                                while(!clientList[j].isSaveEnd)
-                                {
-                                    ;
-                                }
-                                clientList[j].isSaveEnd = false;
-                            }
-                        }
                         
                         
                     }
