@@ -43,6 +43,8 @@ namespace WindowsFormsApp11
 
         public bool askSave { get; set; }
 
+        public bool isSaveEnd { get; set; }
+
         public bool isAddSlide { get; set; }
 
         public string saveFileName { get; set; } //클라이언트로부터받은 저장할슬라이드가있는ppt파일이름 ->서버에게보낼것
@@ -254,8 +256,8 @@ namespace WindowsFormsApp11
             networkStream.Write(bytes, 0, bytes.Length);
             
             fs.Close();
-            
-            
+
+            isSaveEnd = true;
         }
     }
 }
