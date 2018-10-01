@@ -263,7 +263,7 @@ namespace WindowsFormsApp11
                         int ByteSize = 0;
                         Byte[] FileSizeBytes = new byte[client.ReceiveBufferSize];
                         ByteSize = stream.Read(FileSizeBytes, 0, FileSizeBytes.Length);
-                        int MaxFileLength = Convert.ToInt32(Encoding.UTF8.GetString(FileSizeBytes, 0, ByteSize));
+                        //int MaxFileLength = Convert.ToInt32(Encoding.UTF8.GetString(FileSizeBytes, 0, ByteSize));
 
                         ///전송준비작업을 완료했다고 서버에 전해줌
                         byte[] ReadyTransBytes = new byte[client.ReceiveBufferSize];
